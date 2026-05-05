@@ -1,0 +1,517 @@
+\documentclass{eleclab-report}
+
+\usetikzlibrary{arrows.meta,calc}
+\usepackage[siunitx, RPvoltages]{circuitikz}
+
+\setexperimentnumber{4}
+\setexperimenttitle{一阶二阶电路暂态过程研究}
+
+\newcommand{\ExpFourTableSetup}{%
+  \setlength{\tabcolsep}{4pt}%
+  \renewcommand{\arraystretch}{1.18}%
+}
+\newcommand{\ExpFourTableFont}{\ElecLabBodyFont\fontsize{9pt}{12pt}\selectfont}
+\newcommand{\WaveBlank}{\rule{0pt}{6.2\baselineskip}}
+\newcommand{\SmallWaveBlank}{\rule{0pt}{4.4\baselineskip}}
+\newcommand{\ExpFourTable}[1]{%
+  \begingroup
+  \ExpFourTableSetup
+  \begin{center}
+  {\ExpFourTableFont #1}
+  \end{center}
+  \endgroup
+}
+\newcommand{\GuideFigure}[3]{%
+  \begin{center}
+    \includegraphics[width=#1\linewidth]{#2}\\[-0.2\baselineskip]
+    {\ExpFourTableFont #3}
+  \end{center}
+}
+\newcommand{\GuideFigurePair}[6]{%
+  \begin{center}
+    \begin{tabular}{@{}c@{\hspace{0.8cm}}c@{}}
+      \includegraphics[width=#1\linewidth]{#2} &
+      \includegraphics[width=#3\linewidth]{#4} \\
+      {\ExpFourTableFont #5} & {\ExpFourTableFont #6}
+    \end{tabular}
+  \end{center}
+}
+\newcommand{\ExpFourCircuitLabel}[1]{\node[anchor=base] at (0,-0.78) {\labminorfont #1};}
+\newcommand{\Resistor}[4]{%
+  \draw (#1,#2) -- ($(#1,#2)!0.28!(#3,#4)$);
+  \draw ($(#1,#2)!0.28!(#3,#4)$) rectangle ($(#1,#2)!0.72!(#3,#4)+(0,0.20)$);
+  \draw ($(#1,#2)!0.72!(#3,#4)$) -- (#3,#4);
+}
+\newcommand{\CapacitorV}[3]{%
+  \draw (#1,#2) -- (#1,#2-0.25);
+  \draw (#1-0.28,#2-0.25) -- (#1+0.28,#2-0.25);
+  \draw (#1-0.28,#2-0.45) -- (#1+0.28,#2-0.45);
+  \draw (#1,#2-0.45) -- (#1,#3);
+}
+\newcommand{\CapacitorH}[4]{%
+  \draw (#1,#2) -- (#1+0.45,#2);
+  \draw (#1+0.45,#2-0.28) -- (#1+0.45,#2+0.28);
+  \draw (#1+0.65,#2-0.28) -- (#1+0.65,#2+0.28);
+  \draw (#1+0.65,#2) -- (#3,#4);
+}
+\newcommand{\InductorH}[4]{%
+  \draw (#1,#2) -- (#1+0.25,#2);
+  \draw (#1+0.25,#2)
+    .. controls (#1+0.37,#2+0.32) and (#1+0.55,#2+0.32) .. (#1+0.67,#2)
+    .. controls (#1+0.79,#2-0.32) and (#1+0.97,#2-0.32) .. (#1+1.09,#2)
+    .. controls (#1+1.21,#2+0.32) and (#1+1.39,#2+0.32) .. (#1+1.51,#2)
+    .. controls (#1+1.63,#2-0.32) and (#1+1.81,#2-0.32) .. (#1+1.93,#2);
+  \draw (#1+1.93,#2) -- (#3,#4);
+}
+\newcommand{\ScopeTap}[3]{%
+  \draw[-{Latex[length=2.0mm]}] (#1,#2) -- ++(0,0.55);
+  \node[anchor=south] at (#1,#2+0.55) {\scriptsize #3};
+}
+
+\newcommand{\RcResponseCircuit}[3]{%
+  \begin{tikzpicture}[x=1cm,y=1cm,line cap=round,line join=round]
+    \draw[-{Latex[length=2.2mm]}] (-0.7,0) -- (0.15,0);
+    \node[anchor=east] at (-0.75,0) {\scriptsize 函数信号发生器 $u_S$};
+    \draw (0,0) -- (1.2,0);
+    \Resistor{1.2}{0}{3.2}{0}
+    \node[above] at (2.2,0.22) {\scriptsize #1};
+    \draw (3.2,0) -- (4.3,0);
+    \CapacitorV{3.65}{0}{-1.45}
+    \node[right] at (3.84,-0.68) {\scriptsize #2};
+    \draw[-{Latex[length=2.2mm]}] (4.3,0) -- (5.1,0);
+    \draw (0,-1.45) -- (4.6,-1.45);
+    \draw[-{Latex[length=2.2mm]}] (4.6,-1.45) -- (5.1,-1.45);
+    \ScopeTap{0.35}{0}{CH1轴}
+    \ScopeTap{3.65}{0}{CH2轴}
+    \node[below] at (0.6,-1.45) {\scriptsize CH1地};
+    \node[below] at (3.65,-1.45) {\scriptsize CH2地};
+    \node[anchor=base] at (2.3,-2.35) {\labminorfont #3};
+  \end{tikzpicture}%
+}
+
+\newcommand{\DifferentiatorCircuit}{%
+  \begin{tikzpicture}[x=1cm,y=1cm,line cap=round,line join=round]
+    \draw[-{Latex[length=2.2mm]}] (-0.7,0) -- (0.05,0);
+    \node[anchor=east] at (-0.75,0) {\scriptsize $u_S(t)$};
+    \CapacitorH{0}{0}{1.35}{0}
+    \node[above] at (0.55,0.32) {\scriptsize $C=3900\mathrm{pF}$};
+    \draw (1.35,0) -- (2.1,0);
+    \draw (2.1,0) -- (2.1,-1.35);
+    \Resistor{2.1}{-1.35}{2.1}{-2.8}
+    \node[right] at (2.28,-2.05) {\scriptsize $R$};
+    \draw (2.1,-2.8) -- (-0.05,-2.8);
+    \draw[-{Latex[length=2.2mm]}] (-0.05,-2.8) -- (-0.7,-2.8);
+    \ScopeTap{2.1}{0}{CH2轴}
+    \node[right] at (2.35,-0.8) {\scriptsize $u_R(t)$};
+    \node[anchor=base] at (0.9,-3.4) {\labminorfont RC微分电路};
+  \end{tikzpicture}%
+}
+
+\newcommand{\IntegratorCircuit}{%
+  \begin{tikzpicture}[x=1cm,y=1cm,line cap=round,line join=round]
+    \draw[-{Latex[length=2.2mm]}] (-0.7,0) -- (0.05,0);
+    \node[anchor=east] at (-0.75,0) {\scriptsize $u_S(t)$};
+    \draw (0,0) -- (0.5,0);
+    \Resistor{0.5}{0}{2.3}{0}
+    \node[above] at (1.4,0.25) {\scriptsize $R$};
+    \draw (2.3,0) -- (3.15,0);
+    \CapacitorV{2.75}{0}{-1.45}
+    \node[right] at (2.95,-0.7) {\scriptsize $C=0.047\mu\mathrm{F}$};
+    \draw (0,-1.45) -- (3.55,-1.45);
+    \ScopeTap{2.75}{0}{CH2轴}
+    \node[right] at (3.08,-0.25) {\scriptsize $u_C(t)$};
+    \node[anchor=base] at (1.45,-2.05) {\labminorfont RC积分电路};
+  \end{tikzpicture}%
+}
+
+\newcommand{\RlcTransientCircuit}{%
+  \begin{tikzpicture}[x=1cm,y=1cm,line cap=round,line join=round]
+    \draw[-{Latex[length=2.2mm]}] (-0.75,0) -- (0.05,0);
+    \node[anchor=east] at (-0.8,0) {\scriptsize 函数信号发生器 $u_S$};
+    \InductorH{0}{0}{2.1}{0}
+    \node[above] at (1.0,0.37) {\scriptsize $L=5\mathrm{mH}$};
+    \Resistor{2.1}{0}{3.7}{0}
+    \node[above] at (2.9,0.24) {\scriptsize $R$};
+    \draw (3.7,0) -- (4.8,0);
+    \CapacitorV{4.35}{0}{-1.45}
+    \node[right] at (4.55,-0.7) {\scriptsize $C=3900\mathrm{pF}$};
+    \draw (0,-1.45) -- (4.8,-1.45);
+    \ScopeTap{0.25}{0}{CH1轴}
+    \ScopeTap{4.35}{0}{CH2轴}
+    \node[anchor=base] at (2.2,-2.05) {\labminorfont 观测二阶RLC电路时域响应};
+  \end{tikzpicture}%
+}
+
+\newcommand{\RlcResonanceCircuit}{%
+\begin{circuitikz}[american]
+    % 1. 压缩高度 (y=2)
+    \draw (0,2) to[short, o-] (1,2)
+          to[L=$L$, -*] (4,2);
+          
+    \draw (4,2) to[C=$C$] (4,0);
+    
+    % 2. 关键改动：改变绘制方向 (从 1,0 到 3,0) 
+    % 并显式使用 l=$R$。在左->右路径中，l 默认就在上方。
+    \draw (0,0) to[short, o-*] (1,0) 
+          to[R, l=$R$, *-*] (3,0) -- (4,0);
+    
+    % 3. 地线
+    \draw (1,-1) node[ground] {};
+
+    % 4. 左侧电压表
+    \draw (1,2) to[rmeter, t=V] (1,0);
+
+    % 5. 底部电压表：通过增加垂直连线长度并使用 t=V 确保字符在圆圈内
+    % 我们将连线深度增加到 -1.2，确保给上方的 R 留出绝对充足的空间
+    \draw (1,0) -- (1,-1.2)
+          to[rmeter, t=V] (3,-1.2)
+          -- (3,0);
+
+    % 6. 文字标注
+    \node[anchor=east] at (-0.2, 1) {函数信号发生器};
+
+\end{circuitikz}
+  % \begin{tikzpicture}[x=1cm,y=1cm,line cap=round,line join=round]
+  %   \node[anchor=east] at (-0.4,0) {\scriptsize 函数信号发生器};
+  %   \draw[-{Latex[length=2.2mm]}] (-0.35,0) -- (0.3,0);
+  %   \draw (0.3,0) -- (0.8,0);
+  %   \InductorH{0.8}{0}{3.0}{0}
+  %   \node[above] at (1.85,0.36) {\scriptsize $L=5\mathrm{mH}$};
+  %   \draw (3.0,0) -- (4.0,0);
+  %   \CapacitorV{4.0}{0}{-1.55}
+  %   \node[right] at (4.2,-0.68) {\scriptsize $C=0.047\mu\mathrm{F}$};
+  %   \draw (4.0,-1.55) -- (1.35,-1.55);
+  %   \Resistor{1.35}{-1.55}{0}{-1.55}
+  %   \node[below] at (0.65,-1.58) {\scriptsize $R=1\mathrm{k}\Omega$};
+  %   \draw (0,-1.55) -- (-0.35,-1.55);
+  %   \node[circle,draw,inner sep=1.5pt] at (0.35,-0.45) {\scriptsize V};
+  %   \draw (0.35,-0.30) -- (0.35,0);
+  %   \draw (0.35,-0.60) -- (0.35,-1.55);
+  %   \node[circle,draw,inner sep=1.5pt] at (0.65,-2.20) {\scriptsize V};
+  %   \draw (0.05,-1.55) -- (0.05,-2.20) -- (0.48,-2.20);
+  %   \draw (0.82,-2.20) -- (1.25,-2.20) -- (1.25,-1.55);
+  %   \node[anchor=base] at (2.0,-2.75) {\labminorfont RLC串联谐振观测电路};
+  % \end{tikzpicture}%
+}
+
+\newcommand{\RcTauTable}{%
+  \begin{tabular}{@{}C{3.0cm}C{3.8cm}C{3.8cm}C{3.8cm}@{}}
+    \toprule
+    RC取值 & $R=10\mathrm{k}\Omega$，$C=3900\mathrm{pF}$ &
+    $R=51\mathrm{k}\Omega$，$C=3900\mathrm{pF}$ &
+    $R=51\mathrm{k}\Omega$，$C=0.047\mu\mathrm{F}$ \\
+    \midrule
+    $\tau$理论值 & & & \\
+    \cmidrule(lr){1-4}
+    $u_C$波形（同一坐标中画上$u_S$作为参照） &
+    \WaveBlank & \WaveBlank & \WaveBlank \\
+    \cmidrule(lr){1-4}
+    $u_C$周期、峰峰值 & & & \\
+    \cmidrule(lr){1-4}
+    分析时间常数$\tau$对响应波形的影响 & \multicolumn{3}{C{11.4cm}}{\LabTableBlank} \\
+    \bottomrule
+  \end{tabular}%
+}
+
+\newcommand{\RcFrequencyTable}{%
+  \begin{tabular}{@{}C{3.0cm}C{3.8cm}C{3.8cm}C{3.8cm}@{}}
+    \toprule
+    方波频率$f$ & $100\mathrm{Hz}$ & $1\mathrm{kHz}$ & $10\mathrm{kHz}$ \\
+    \midrule
+    $u_C$波形（同一坐标中画上$u_S$作为参照） &
+    \WaveBlank & \WaveBlank & \WaveBlank \\
+    \cmidrule(lr){1-4}
+    $u_C$周期、峰峰值 & & & \\
+    \cmidrule(lr){1-4}
+    分析$f$对波形的影响 & \multicolumn{3}{C{11.4cm}}{\LabTableBlank} \\
+    \bottomrule
+  \end{tabular}%
+}
+
+\newcommand{\TauMeasureTable}{%
+  \begin{tabular}{@{}C{2.7cm}C{2.2cm}C{2.2cm}C{2.2cm}C{2.2cm}C{2.2cm}@{}}
+    \toprule
+    $R$、$C$取值 & $T$ & $n$ & $m$ & $\tau$测量值 & 相对误差 \\
+    \midrule
+    $R=51\mathrm{k}\Omega$，$C=3900\mathrm{pF}$ &
+    \LabTableBlank & \LabTableBlank & \LabTableBlank & \LabTableBlank & \LabTableBlank \\
+    \bottomrule
+  \end{tabular}%
+}
+
+\newcommand{\FiveStepRcTable}[6]{%
+  \begin{tabular}{@{}C{2.25cm}*{5}{C{2.42cm}}@{}}
+    \toprule
+    $R$ & #1 & #2 & #3 & #4 & #5 \\
+    \midrule
+    $\tau$理论值 & & & & & \\
+    \cmidrule(lr){1-6}
+    #6波形（同一坐标中画上$u_S$作为参照） &
+    \SmallWaveBlank & \SmallWaveBlank & \SmallWaveBlank & \SmallWaveBlank & \SmallWaveBlank \\
+    \cmidrule(lr){1-6}
+    #6周期、峰峰值 & & & & & \\
+    \bottomrule
+  \end{tabular}%
+}
+
+\newcommand{\RlcDampingTable}{%
+  \begin{tabular}{@{}C{1.65cm}C{1.85cm}*{5}{C{1.95cm}}@{}}
+    \toprule
+    项目 & 理论临界值 & 数据1 & 数据2 & 数据3 & 数据4 & 数据5 \\
+    \midrule
+    $R$取值 & $2\sqrt{L/C}$ & & & & & \\
+    \cmidrule(lr){1-7}
+    阻尼状态 & & 无阻尼/欠阻尼 & 欠阻尼 & 临界阻尼 & 过阻尼 & 过阻尼 \\
+    \cmidrule(lr){1-7}
+    $u_C$波形 & & \SmallWaveBlank & \SmallWaveBlank & \SmallWaveBlank & \SmallWaveBlank & \SmallWaveBlank \\
+    \cmidrule(lr){1-7}
+    周期、峰峰值 & & & & & & \\
+    \bottomrule
+  \end{tabular}%
+}
+
+\newcommand{\RlcResonanceTable}{%
+  \begin{tabular}{@{}C{2.3cm}*{7}{C{1.65cm}}@{}}
+    \toprule
+    $f/\mathrm{kHz}$ & & & & & & & \\
+    \midrule
+    $U_S$有效值/V & & & & & & & \\
+    \cmidrule(lr){1-8}
+    $U_R$有效值/V & & & & & & & \\
+    \cmidrule(lr){1-8}
+    谐振判断 & & & & & & & \\
+    \bottomrule
+  \end{tabular}%
+}
+
+\begin{document}
+\makelabtitle
+\makelabheadertable
+
+\LabMajorSection{实验目的}
+\begin{LabArabicList}
+  \item 熟练掌握函数信号发生器和数字示波器的使用方法。
+  \item 观察和分析一阶电路的零输入响应、零状态响应及方波响应。
+  \item 观察积分电路和微分电路的时域波形，掌握时间常数的测量方法。
+  \item 研究二阶电路在欠阻尼、临界阻尼和过阻尼情况下的响应波形。
+  \item 观察RLC串联电路的谐振现象。
+\end{LabArabicList}
+
+\LabMajorSection{实验原理}
+\LabMinorSection{一阶电路}
+\LabItem{RC一阶电路的零输入响应}
+电路在无外加激励时，由储能元件初始状态引起的响应称为零输入响应。RC电路中若电容已充至初始电压$u_C(0_-)$，换路后经电阻$R$放电，则
+\GuideFigure{0.40}{exp4/assets/principle-rc-circuit.png}{图5.3.1 一阶电路}
+\[
+  u_C+RC\frac{du_C}{dt}=0,\qquad
+  u_C(t)=u_C(0_-)e^{-t/\tau}\quad (t\geq 0)
+\]
+\[
+  i_C(t)=-\frac{u_C(0_-)}{R}e^{-t/\tau},\qquad \tau=RC
+\]
+时间常数$\tau$表示电容电压由初始值衰减到$1/e$，即约$36.8\%$时所需的时间。
+\GuideFigure{0.40}{exp4/assets/principle-rc-zero-input.png}{图5.3.2 一阶电路的零输入响应}
+
+\LabItem{RC一阶电路的零状态响应}
+储能元件初始值为零时，电路对外加激励的响应称为零状态响应。若电容初始电压为0，换路后通过$R$向电容充电，则
+\[
+  u_C+RC\frac{du_C}{dt}=U_S,\qquad
+  u_C(t)=U_S(1-e^{-t/\tau})\quad (t\geq 0)
+\]
+\[
+  i_C(t)=\frac{U_S}{R}e^{-t/\tau}
+\]
+此时$\tau=RC$表示电容电压由0上升到稳态值$(1-1/e)$，即约$63.2\%$时所需的时间。
+\GuideFigure{0.40}{exp4/assets/principle-rc-zero-state.png}{图5.3.3 一阶电路的零状态响应}
+
+\LabItem{RC一阶电路的全响应}
+电路在输入激励和初始状态共同作用下的响应称为全响应。若换路前电容电压为$u_C(0_-)=U_0$，换路后接入直流激励$U_S$，则
+\[
+  u_C(t)=U_S(1-e^{-t/\tau})+u_C(0_-)e^{-t/\tau}
+       =\bigl[u_C(0_-)-U_S\bigr]e^{-t/\tau}+U_S
+\]
+\[
+  i_C(t)=\frac{U_S-u_C(0_-)}{R}e^{-t/\tau}\quad (t\geq 0)
+\]
+全响应可看作零状态分量与零输入分量之和，也可看作自由分量与强制分量之和。自由分量随时间衰减，衰减规律仅由电路参数$R$、$C$决定。
+\GuideFigure{0.40}{exp4/assets/principle-rc-full-response.png}{图5.3.4 一阶电路的全响应}
+
+\LabItem{RC一阶电路的方波响应}
+实验中常用函数信号发生器输出方波来模拟阶跃激励。方波上升沿相当于零状态响应的正阶跃激励，方波下降沿相当于零输入响应的负阶跃激励。只要方波的半周期$T/2$大于或接近阶跃响应暂态过程所经历的时间，示波器上即可稳定显示反复出现的充、放电响应。工程上通常认为经过$(3\sim5)\tau$后暂态过程基本结束。
+\GuideFigure{0.62}{exp4/assets/principle-rc-square-response.png}{图5.3.5 一阶电路的方波响应波形}
+
+\LabItem{微分电路和积分电路}
+在RC串联电路中，若取电阻两端为输出，并使$\tau\ll t_p$（$t_p$为矩形脉冲脉宽，工程上常取$\tau\leq0.1\sim0.2t_p$），则电容充放电很快，有$u_C(t)\approx u_i(t)$，输出近似为
+\[
+  u_o(t)=u_R(t)=RC\frac{du_C(t)}{dt}\approx RC\frac{du_i(t)}{dt}
+\]
+因此该电路称为微分电路，可把方波突变沿转换为尖脉冲。
+\GuideFigure{0.48}{exp4/assets/principle-rc-differentiator.png}{图5.3.6（a）RC微分电路及波形}
+
+若取电容两端为输出，并使$\tau\gg t_p$（工程上常取$\tau\geq5\sim10t_p$），则电容充放电很慢，有$u_R(t)\approx u_i(t)$，输出近似为
+\[
+  u_o(t)=u_C(t)=\frac{1}{C}\int_0^t i(t)\,dt
+          \approx \frac{1}{RC}\int_0^t u_i(t)\,dt
+\]
+因此该电路称为积分电路，可把方波转换为近似三角波或锯齿波。
+\GuideFigure{0.48}{exp4/assets/principle-rc-integrator.png}{图5.3.6（b）RC积分电路及波形}
+
+\LabItem{时间常数的测量}
+响应波形衰减或上升的快慢取决于$\tau=RC$。测量时应调节方波频率，使半周期内响应能够进入或接近稳态。可在波形上找$0.632U_S$点测量时间常数；若方波周期$T$在水平轴占$n$格、$\tau$占$m$格，则
+\[
+  \tau=m\frac{T}{n}
+\]
+也可用示波器扫描速率$K_t$计算$\tau=K_t m$，或直接用光标法测量。方波频率过高时，响应尚未进入稳态，测得$\tau$偏小；频率过低时，暂态部分被压缩，读数误差增大。
+
+\LabMinorSection{二阶电路}
+\LabItem{RLC串联电路时域响应}
+能用二阶微分方程描述的电路称为二阶电路。RLC串联电路中电容电压满足
+\GuideFigure{0.30}{exp4/assets/principle-rlc-circuit.png}{图5.3.7 RLC串联电路}
+\[
+  LC\frac{d^2u_C}{dt^2}+RC\frac{du_C}{dt}+u_C=u_S
+\]
+对应的特征方程为
+\[
+  LCp^2+RCp+1=0
+\]
+其特征根为
+\[
+  p_{1,2}=-\frac{R}{2L}\pm
+  \sqrt{\left(\frac{R}{2L}\right)^2-\frac{1}{LC}}
+\]
+令电容初始电压$u_C(0_+)=U_0$，电路响应随$R$与临界值$2\sqrt{L/C}$的关系而变化。
+
+当$R>2\sqrt{L/C}$时，特征根为两个不相等的负实根，响应为过阻尼，表现为非振荡充放电过程。零输入情况下可写为
+\[
+  u_C(t)=\frac{U_0}{p_1-p_2}\left(p_2e^{p_1t}-p_1e^{p_2t}\right)
+\]
+\GuideFigure{0.32}{exp4/assets/principle-rlc-overdamped.png}{图5.3.8 零输入下非振荡放电过程响应曲线}
+当$R<2\sqrt{L/C}$时，特征根为共轭复根，响应为欠阻尼，表现为衰减振荡。令
+\[
+  \alpha=\frac{R}{2L},\qquad
+  \omega_d=\sqrt{\frac{1}{LC}-\left(\frac{R}{2L}\right)^2}
+\]
+则电容电压可概括为
+\[
+  u_C(t)=Ae^{-\alpha t}\sin(\omega_dt+\theta)
+\]
+其中$A$和$\theta$由初始条件决定。$R$越小，衰减越慢，振荡越明显。
+\GuideFigure{0.30}{exp4/assets/principle-rlc-underdamped.png}{图5.3.9 零输入下振荡放电过程响应曲线}
+
+当$R=2\sqrt{L/C}$时，特征方程具有重根，响应处于振荡与非振荡的临界点，称为临界阻尼。零输入情况下
+\[
+  u_C(t)=U_0(1+\alpha t)e^{-\alpha t}
+\]
+临界阻尼通常是无振荡响应中达到稳态最快的情况。
+\GuideFigurePair{0.22}{exp4/assets/principle-rlc-critical.png}{0.32}{exp4/assets/principle-rlc-damping-comparison.png}{图5.3.10 临界阻尼过程响应曲线}{图5.3.11 二阶电路零状态响应情况曲线}
+
+\LabItem{RLC串联电路的谐振}
+RLC串联电路阻抗为
+\GuideFigure{0.32}{exp4/assets/principle-rlc-resonance.png}{图5.3.12 RLC串联谐振观测电路}
+\[
+  Z=R+j\left(\omega L-\frac{1}{\omega C}\right)=|Z|\angle\varphi
+\]
+当总电抗为零，即
+\[
+  \omega L-\frac{1}{\omega C}=0
+\]
+时，电路处于谐振状态。谐振角频率和谐振频率为
+\[
+  \omega_0=\frac{1}{\sqrt{LC}},\qquad
+  f_0=\frac{1}{2\pi\sqrt{LC}}
+\]
+谐振频率只与$L$、$C$有关。$\omega<\omega_0$时电路呈容性，$\omega>\omega_0$时电路呈感性，$\omega=\omega_0$时阻抗最小、电流最大，电阻两端电压$U_R$达到最大，且电路总电压与电流同相。
+
+\LabMajorSection{实验设备}
+\begin{LabArabicList}
+  \item DG1022型函数信号发生器。
+  \item NDS104S型数字示波器。
+  \item 数字万用表、电阻箱、九孔方板、导线及实验所需电阻、电容、电感元件。
+\end{LabArabicList}
+
+\LabMajorSection{实验内容}
+
+\LabMinorSection{一阶RC电路时域响应}
+\LabItem{电路图}
+\begin{center}
+\RcResponseCircuit{$R$}{$C$}{观测一阶RC电路时域响应}
+\end{center}
+\LabItem{实验步骤}
+函数信号发生器输出$1.0\mathrm{kHz}$、$2.0\mathrm{V_{PP}}$方波。按图接线，用示波器CH1观察$u_S$，CH2观察$u_C$，改变$R$、$C$取值，记录$u_C$波形、周期和峰峰值。
+\LabItem{测试数据}
+\ExpFourTable{\RcTauTable}
+\LabDataAnalysisBlock{2.8\baselineskip}
+
+\LabMinorSection{$f$对一阶RC电路响应的影响}
+\LabItem{测试条件}
+取$R=51\mathrm{k}\Omega$、$C=3900\mathrm{pF}$，函数信号发生器输出$2.0\mathrm{V_{PP}}$方波，分别改变频率。
+\LabItem{测试数据}
+\ExpFourTable{\RcFrequencyTable}
+\LabDataAnalysisBlock{2.4\baselineskip}
+
+\LabMinorSection{测量时间常数$\tau$}
+\LabItem{测试条件}
+取$R=51\mathrm{k}\Omega$、$C=3900\mathrm{pF}$。调节方波频率，使半周期内响应能够进入稳态，利用$0.632U_S$点或示波器光标测量$\tau$。
+\LabItem{测试数据}
+\ExpFourTable{\TauMeasureTable}
+\LabDataAnalysisBlock{2.4\baselineskip}
+
+\LabMinorSection{观察微分电路输出电压波形}
+\LabItem{电路图}
+\begin{center}
+\DifferentiatorCircuit
+\end{center}
+\LabItem{测试条件}
+函数信号发生器输出$1.0\mathrm{kHz}$、$2.0\mathrm{V_{PP}}$方波，$C=3900\mathrm{pF}$，$R$用电阻箱取5个合适数值。
+\LabItem{测试数据}
+\ExpFourTable{\FiveStepRcTable{$5\mathrm{k}\Omega$}{$10\mathrm{k}\Omega$}{$15\mathrm{k}\Omega$}{$20\mathrm{k}\Omega$}{$25\mathrm{k}\Omega$}{$u_R$}}
+\LabDataAnalysisBlock{2.8\baselineskip}
+
+\LabMinorSection{观察积分电路输出电压波形}
+\LabItem{电路图}
+\begin{center}
+\IntegratorCircuit
+\end{center}
+\LabItem{测试条件}
+函数信号发生器输出$1.0\mathrm{kHz}$、$2.0\mathrm{V_{PP}}$方波，$C=0.047\mu\mathrm{F}$，$R$用电阻箱取5个合适数值。
+\LabItem{测试数据}
+\ExpFourTable{\FiveStepRcTable{$55\mathrm{k}\Omega$}{$65\mathrm{k}\Omega$}{$75\mathrm{k}\Omega$}{$85\mathrm{k}\Omega$}{$95\mathrm{k}\Omega$}{$u_C$}}
+\LabDataAnalysisBlock{2.8\baselineskip}
+
+\LabMinorSection{观测二阶RLC电路的时域响应}
+\LabItem{电路图}
+\begin{center}
+\RlcTransientCircuit
+\end{center}
+\LabItem{测试条件}
+函数信号发生器输出$1.0\mathrm{kHz}$、$2.0\mathrm{V_{PP}}$方波，$L=5\mathrm{mH}$，$C=3900\mathrm{pF}$，$R$用电阻箱代替。从小到大调节$R$，观察无阻尼、欠阻尼、临界阻尼、过阻尼响应。
+\LabItem{测试数据}
+\ExpFourTable{\RlcDampingTable}
+\LabDataAnalysisBlock{3.2\baselineskip}
+
+\LabMinorSection{定性观察RLC串联电路谐振现象}
+\LabItem{电路图}
+\begin{center}
+\RlcResonanceCircuit
+\end{center}
+\LabItem{测试条件}
+函数信号发生器输出$2.0\mathrm{V_{PP}}$正弦波，参考取$R=1\mathrm{k}\Omega$，$L=5\mathrm{mH}$，$C=0.047\mu\mathrm{F}$。改变频率，记录$U_S$和$U_R$，以$U_R$最大或$u_R$与$u_S$同相作为谐振点判断依据。
+\LabItem{测试数据}
+\ExpFourTable{\RlcResonanceTable}
+\LabDataAnalysisBlock{3.0\baselineskip}
+
+\LabMajorSection{思考题}
+\labresetitems
+\LabItem{何谓积分电路和微分电路？它们必须具备什么条件？这两种电路有什么作用？}
+\LabBlank{3.4\baselineskip}
+\LabItem{当RLC二阶电路处于过阻尼情况下，若再增加电阻$R$，对过渡过程有何影响？在欠阻尼情况下，再减少$R$，过渡过程又有何影响？在什么情况下电路达到稳态的时间最短？}
+\LabBlank{3.8\baselineskip}
+
+\LabMajorSection{附加题}
+\labresetitems
+\LabItem{自行设计RLC二阶动态电路，用Multisim软件仿真，在方波激励下改变电路参数$R$，使其满足过阻尼、欠阻尼、临界阻尼、无阻尼条件，观察并记录$u_C$和$u_R$波形。}
+\LabBlank{3.0\baselineskip}
+\LabItem{在一阶二阶电路响应实验中，结合科学精神内涵，说明从发现实验数据与理论预期存在偏差，到寻找原因并解决问题的全过程。}
+\LabBlank{3.0\baselineskip}
+
+\end{document}
