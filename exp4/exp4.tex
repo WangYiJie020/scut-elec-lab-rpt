@@ -27,11 +27,26 @@
     {\ExpFourTableFont #3}
   \end{center}
 }
+\newcommand{\GuideCircuitFigure}[3]{%
+  \begin{center}
+    \resizebox{#1\linewidth}{!}{#2}\\[-0.2\baselineskip]
+    {\ExpFourTableFont #3}
+  \end{center}
+}
 \newcommand{\GuideFigurePair}[6]{%
   \begin{center}
     \begin{tabular}{@{}c@{\hspace{0.8cm}}c@{}}
       \includegraphics[width=#1\linewidth]{#2} &
       \includegraphics[width=#3\linewidth]{#4} \\
+      {\ExpFourTableFont #5} & {\ExpFourTableFont #6}
+    \end{tabular}
+  \end{center}
+}
+\newcommand{\GuideCircuitFigurePair}[6]{%
+  \begin{center}
+    \begin{tabular}{@{}c@{\hspace{0.8cm}}c@{}}
+      \resizebox{#1\linewidth}{!}{#2} &
+      \resizebox{#3\linewidth}{!}{#4} \\
       {\ExpFourTableFont #5} & {\ExpFourTableFont #6}
     \end{tabular}
   \end{center}
@@ -131,6 +146,192 @@
           to[short] (3,0);
     \node[anchor=east] at (-0.2, 1) {函数信号发生器};
 \end{circuitikz}
+}
+
+\newcommand{\PrincipleRcCircuit}{%
+  \begin{circuitikz}[x=1cm,y=1cm,line cap=round,line join=round]
+    \draw (0,0) to[V=$U_S$] (0,3.0)
+      to[short] (0.8,3.0);
+    \node[above] at (0.78,3.08) {\scriptsize a};
+    \draw (0.8,3.0) node[ocirc] {};
+    \draw (1.72,3.0) node[ocirc] {} to[R=$u_R(t)$] (3.65,3.0)
+      to[short] (5.05,3.0)
+      to[C=$C$] (5.05,0)
+      to[short] (0,0);
+    \draw (0.84,2.92) -- (1.5,2.58);
+    \draw (1.45,0) to[short,*-] (1.45,2.1) node[ocirc] {};
+    \draw (1.1,2.16) -- (1.45,2.1);
+    \node[left] at (1.1,2.18) {\scriptsize b};
+    \node[above] at (1.25,3.32) {\scriptsize $S\;(t=0)$};
+    \node[right] at (5.25,1.55) {\scriptsize $u_C(t)$};
+    \draw[-{Latex[length=1.8mm]}] (5.05,2.55) -- (5.05,1.9);
+    \node[right] at (5.25,2.4) {\scriptsize $i_C(t)$};
+  \end{circuitikz}%
+}
+
+\newcommand{\ResponseAxes}[2]{%
+  \draw[-{Latex[length=1.8mm]}] (0,0) -- (4.6,0) node[right] {\scriptsize $t$};
+  \draw[-{Latex[length=1.8mm]}] (0,0) -- (0,2.2) node[above] {\scriptsize #1};
+  \node[left] at (0,0) {\scriptsize $0$};
+  \node[left] at (0,1.65) {\scriptsize #2};
+}
+\newcommand{\PrincipleRcZeroInput}{%
+  \begin{circuitikz}[x=1cm,y=1cm,line cap=round,line join=round]
+    \ResponseAxes{$u_C(t)$}{$U_0$}
+    \draw[densely dashed] (0,1.65) -- (4.1,1.65);
+    \draw[densely dashed] (0,0.61) -- (1.2,0.61) -- (1.2,0);
+    \node[left] at (0,0.61) {\scriptsize $0.368U_0$};
+    \node[below] at (1.2,0) {\scriptsize $\tau$};
+    \draw[thick] plot[smooth,domain=0:4.2,samples=80] ({\x},{1.65*exp(-\x/1.2)});
+  \end{circuitikz}%
+}
+\newcommand{\PrincipleRcZeroState}{%
+  \begin{circuitikz}[x=1cm,y=1cm,line cap=round,line join=round]
+    \ResponseAxes{$u_C(t)$}{$U_S$}
+    \draw[densely dashed] (0,1.65) -- (4.1,1.65);
+    \draw[densely dashed] (0,1.04) -- (1.2,1.04) -- (1.2,0);
+    \node[left] at (0,1.04) {\scriptsize $0.632U_S$};
+    \node[below] at (1.2,0) {\scriptsize $\tau$};
+    \draw[thick] plot[smooth,domain=0:4.2,samples=80] ({\x},{1.65*(1-exp(-\x/1.2))});
+  \end{circuitikz}%
+}
+\newcommand{\PrincipleRcFullResponse}{%
+  \begin{circuitikz}[x=1cm,y=1cm,line cap=round,line join=round]
+    \ResponseAxes{$u_C(t)$}{}
+    \draw[densely dashed] (0,1.65) -- (4.1,1.65);
+    \draw[densely dashed] (0,0.45) -- (4.1,0.45);
+    \node[left] at (0,1.65) {\scriptsize $U_S$};
+    \node[left] at (0,0.45) {\scriptsize $U_0$};
+    \draw[thick] plot[smooth,domain=0:4.2,samples=80] ({\x},{1.65-(1.65-0.45)*exp(-\x/1.2)});
+    \node[right] at (2.8,1.35) {\scriptsize $U_S+\bigl(U_0-U_S\bigr)e^{-t/\tau}$};
+  \end{circuitikz}%
+}
+\newcommand{\PrincipleRcSquareResponse}{%
+  \begin{circuitikz}[x=1cm,y=1cm,line cap=round,line join=round]
+    \draw[-{Latex[length=1.8mm]}] (0,0) -- (6.5,0) node[right] {\scriptsize $t$};
+    \draw[-{Latex[length=1.8mm]}] (0,-0.15) -- (0,2.45) node[above] {\scriptsize $u_C(t)$};
+    \node[left] at (0,0) {\scriptsize $0$};
+    \node[left] at (0,1.65) {\scriptsize $U_S$};
+    \draw[densely dashed] (0,0) -- (0,1.65) -- (1.55,1.65) -- (1.55,0) -- (3.1,0)
+      -- (3.1,1.65) -- (4.65,1.65) -- (4.65,0) -- (6.2,0);
+    \foreach \x in {1.55,3.1,4.65} \draw[densely dashed] (\x,-0.1) -- (\x,1.75);
+    \draw[thick] plot[smooth,domain=0:1.55,samples=45] ({\x},{1.65*(1-exp(-\x/0.32))/(1-exp(-1.55/0.32))});
+    \draw[thick] plot[smooth,domain=1.55:3.1,samples=45] ({\x},{1.65*exp(-(\x-1.55)/0.32)});
+    \draw[thick] plot[smooth,domain=3.1:4.65,samples=45] ({\x},{1.65*(1-exp(-(\x-3.1)/0.32))/(1-exp(-1.55/0.32))});
+    \draw[thick] plot[smooth,domain=4.65:6.2,samples=45] ({\x},{1.65*exp(-(\x-4.65)/0.32)});
+  \end{circuitikz}%
+}
+\newcommand{\PrincipleDifferentiator}{%
+  \begin{circuitikz}[x=1cm,y=1cm,line cap=round,line join=round]
+    \draw (0,2.0) node[ocirc] {} to[C=$C$] (1.7,2.0) to[short] (2.6,2.0) node[ocirc] {};
+    \draw (1.7,2.0) to[R=$R$] (1.7,0.2);
+    \draw (0,0.2) node[ocirc] {} to[short] (2.6,0.2) node[ocirc] {};
+    \draw[-{Latex[length=1.6mm]}] (-0.25,1.85) -- (-0.25,0.35);
+    \draw[-{Latex[length=1.6mm]}] (2.9,1.85) -- (2.9,0.35);
+    \node[left] at (-0.25,1.1) {\scriptsize $u_i(t)$};
+    \node[right] at (2.9,1.1) {\scriptsize $u_o(t)$};
+    \begin{scope}[shift={(4.0,1.55)}]
+      \draw[-{Latex[length=1.5mm]}] (0,0) -- (3.0,0) node[right] {\scriptsize $t$};
+      \draw[-{Latex[length=1.5mm]}] (0,-0.25) -- (0,1.2) node[above] {\scriptsize $u_i(t)$};
+      \draw[thick] (0,0) -- (0,0.75) -- (0.8,0.75) -- (0.8,0) -- (1.7,0) -- (1.7,0.75) -- (2.5,0.75) -- (2.5,0);
+      \foreach \x in {0.8,1.7,2.5} \draw[densely dashed] (\x,-1.35) -- (\x,0.9);
+    \end{scope}
+    \begin{scope}[shift={(4.0,0.0)}]
+      \draw[-{Latex[length=1.5mm]}] (0,0) -- (3.0,0) node[right] {\scriptsize $t$};
+      \draw[-{Latex[length=1.5mm]}] (0,-0.85) -- (0,0.95) node[above] {\scriptsize $u_o(t)$};
+      \draw[thick] plot[smooth,domain=0:0.75,samples=40] ({\x},{0.85*exp(-\x/0.18)});
+      \draw[thick] plot[smooth,domain=0.8:1.45,samples=40] ({\x},{-0.75*exp(-(\x-0.8)/0.18)});
+      \draw[thick] plot[smooth,domain=1.7:2.35,samples=40] ({\x},{0.85*exp(-(\x-1.7)/0.18)});
+      \draw[thick] plot[smooth,domain=2.5:2.95,samples=35] ({\x},{-0.75*exp(-(\x-2.5)/0.18)});
+    \end{scope}
+  \end{circuitikz}%
+}
+\newcommand{\PrincipleIntegrator}{%
+  \begin{circuitikz}[x=1cm,y=1cm,line cap=round,line join=round]
+    \draw (0,2.0) node[ocirc] {} to[R=$R$] (1.8,2.0) to[short] (2.8,2.0) node[ocirc] {};
+    \draw (1.8,2.0) to[C=$C$] (1.8,0.2);
+    \draw (0,0.2) node[ocirc] {} to[short] (2.8,0.2) node[ocirc] {};
+    \draw[-{Latex[length=1.6mm]}] (-0.25,1.85) -- (-0.25,0.35);
+    \draw[-{Latex[length=1.6mm]}] (3.1,1.85) -- (3.1,0.35);
+    \node[left] at (-0.25,1.1) {\scriptsize $u_i(t)$};
+    \node[right] at (3.1,1.1) {\scriptsize $u_o(t)$};
+    \begin{scope}[shift={(4.25,1.55)}]
+      \draw[-{Latex[length=1.5mm]}] (0,0) -- (3.0,0) node[right] {\scriptsize $t$};
+      \draw[-{Latex[length=1.5mm]}] (0,-0.25) -- (0,1.2) node[above] {\scriptsize $u_i(t)$};
+      \draw[thick] (0,0) -- (0,0.75) -- (0.85,0.75) -- (0.85,0) -- (1.7,0) -- (1.7,0.75) -- (2.55,0.75) -- (2.55,0);
+      \foreach \x/\lab in {0.85/$t_1$,1.7/$t_2$,2.55/$t_3$} {
+        \draw[densely dashed] (\x,-1.35) -- (\x,0.9);
+        \node[below] at (\x,0) {\scriptsize \lab};
+      }
+    \end{scope}
+    \begin{scope}[shift={(4.25,0.0)}]
+      \draw[-{Latex[length=1.5mm]}] (0,0) -- (3.0,0) node[right] {\scriptsize $t$};
+      \draw[-{Latex[length=1.5mm]}] (0,-0.25) -- (0,1.0) node[above] {\scriptsize $u_o(t)$};
+      \draw[thick] (0,0.15) -- (0.85,0.55) -- (1.7,0.2) -- (2.55,0.6) -- (2.95,0.45);
+    \end{scope}
+  \end{circuitikz}%
+}
+\newcommand{\PrincipleRlcCircuit}{%
+  \begin{circuitikz}[x=1cm,y=1cm,line cap=round,line join=round]
+    \draw (0,0) to[V=$u_S$] (0,2.2)
+      to[R=$R$] (1.8,2.2)
+      to[L=$L$] (3.6,2.2)
+      to[C=$C$] (5.1,2.2)
+      to[short] (5.1,0)
+      to[short] (0,0);
+    \draw[-{Latex[length=1.8mm]}] (2.7,2.55) -- (3.15,2.55);
+    \node[above] at (2.92,2.55) {\scriptsize $i$};
+  \end{circuitikz}%
+}
+\newcommand{\PrincipleRlcOverdamped}{%
+  \begin{circuitikz}[x=1cm,y=1cm,line cap=round,line join=round]
+    \ResponseAxes{$u_C(t)$}{$U_0$}
+    \draw[densely dashed] (0,1.65) -- (4.15,1.65);
+    \draw[thick] plot[smooth,domain=0:4.2,samples=80] ({\x},{1.65*(0.75*exp(-\x/1.8)+0.25*exp(-\x/0.28))});
+  \end{circuitikz}%
+}
+\newcommand{\PrincipleRlcUnderdamped}{%
+  \begin{circuitikz}[x=1cm,y=1cm,line cap=round,line join=round]
+    \draw[-{Latex[length=1.8mm]}] (0,0) -- (4.8,0) node[right] {\scriptsize $t$};
+    \draw[-{Latex[length=1.8mm]}] (0,-1.25) -- (0,1.75) node[above] {\scriptsize $u_C(t)$};
+    \node[left] at (0,0) {\scriptsize $0$};
+    \draw[densely dashed] plot[smooth,domain=0:4.5,samples=80] ({\x},{1.35*exp(-\x/1.7)});
+    \draw[densely dashed] plot[smooth,domain=0:4.5,samples=80] ({\x},{-1.35*exp(-\x/1.7)});
+    \draw[thick] plot[smooth,domain=0:4.5,samples=120] ({\x},{1.35*exp(-\x/1.7)*cos(260*\x)});
+  \end{circuitikz}%
+}
+\newcommand{\PrincipleRlcCritical}{%
+  \begin{circuitikz}[x=1cm,y=1cm,line cap=round,line join=round]
+    \ResponseAxes{$u_C(t)$}{$U_0$}
+    \draw[densely dashed] (0,1.65) -- (3.7,1.65);
+    \draw[thick] plot[smooth,domain=0:3.8,samples=80] ({\x},{1.65*(1+\x/0.65)*exp(-\x/0.65)});
+  \end{circuitikz}%
+}
+\newcommand{\PrincipleRlcDampingComparison}{%
+  \begin{circuitikz}[x=1cm,y=1cm,line cap=round,line join=round]
+    \ResponseAxes{$u_C(t)$}{$U_S$}
+    \draw[densely dashed] (0,1.65) -- (4.3,1.65);
+    \draw[thick] plot[smooth,domain=0:4.2,samples=90] ({\x},{1.65*(1-(1+\x/0.65)*exp(-\x/0.65))});
+    \draw[thick,dashed] plot[smooth,domain=0:4.2,samples=90] ({\x},{1.65*(1-0.72*exp(-\x/2.1)-0.28*exp(-\x/0.32))});
+    \draw[thick,densely dotted] plot[smooth,domain=0:4.2,samples=120] ({\x},{1.65*(1-exp(-\x/1.4)*cos(230*\x))});
+    \node[right] at (2.6,1.15) {\scriptsize 临界};
+    \node[right] at (2.9,0.75) {\scriptsize 过阻尼};
+    \node[right] at (2.55,1.95) {\scriptsize 欠阻尼};
+  \end{circuitikz}%
+}
+\newcommand{\PrincipleRlcResonance}{%
+  \begin{circuitikz}[american,x=1cm,y=1cm,line cap=round,line join=round]
+    \draw (0,1.7) node[ocirc] {} to[short] (0.8,1.7)
+      to[L=$L$] (2.3,1.7)
+      to[C=$C$] (3.7,1.7)
+      to[R=$R$] (5.1,1.7)
+      to[short] (5.8,1.7) node[ocirc] {};
+    \draw (0,0) node[ocirc] {} to[short] (5.8,0) node[ocirc] {};
+    \draw (5.1,1.7) to[rmeter,t=V] (5.1,0);
+    \node[above] at (2.9,2.05) {\scriptsize RLC串联支路};
+    \node[left] at (-0.2,0.85) {\scriptsize 函数信号发生器};
+    \node[right] at (5.35,0.85) {\scriptsize 测$U_R$};
+  \end{circuitikz}%
 }
 
 \newcommand{\RcTauTable}{%
@@ -240,7 +441,7 @@
 \LabMinorSection{一阶电路}
 \LabItem{RC一阶电路的零输入响应}
 电路在无外加激励时，由储能元件初始状态引起的响应称为零输入响应。RC电路中若电容已充至初始电压$u_C(0_-)$，换路后经电阻$R$放电，则
-\GuideFigure{0.40}{exp4/assets/principle-rc-circuit.png}{图5.3.1 一阶电路}
+\GuideCircuitFigure{0.40}{\PrincipleRcCircuit}{图5.3.1 一阶电路}
 \[
   u_C+RC\frac{du_C}{dt}=0,\qquad
   u_C(t)=u_C(0_-)e^{-t/\tau}\quad (t\geq 0)
@@ -249,7 +450,7 @@
   i_C(t)=-\frac{u_C(0_-)}{R}e^{-t/\tau},\qquad \tau=RC
 \]
 时间常数$\tau$表示电容电压由初始值衰减到$1/e$，即约$36.8\%$时所需的时间。
-\GuideFigure{0.40}{exp4/assets/principle-rc-zero-input.png}{图5.3.2 一阶电路的零输入响应}
+\GuideCircuitFigure{0.40}{\PrincipleRcZeroInput}{图5.3.2 一阶电路的零输入响应}
 
 \LabItem{RC一阶电路的零状态响应}
 储能元件初始值为零时，电路对外加激励的响应称为零状态响应。若电容初始电压为0，换路后通过$R$向电容充电，则
@@ -261,7 +462,7 @@
   i_C(t)=\frac{U_S}{R}e^{-t/\tau}
 \]
 此时$\tau=RC$表示电容电压由0上升到稳态值$(1-1/e)$，即约$63.2\%$时所需的时间。
-\GuideFigure{0.40}{exp4/assets/principle-rc-zero-state.png}{图5.3.3 一阶电路的零状态响应}
+\GuideCircuitFigure{0.40}{\PrincipleRcZeroState}{图5.3.3 一阶电路的零状态响应}
 
 \LabItem{RC一阶电路的全响应}
 电路在输入激励和初始状态共同作用下的响应称为全响应。若换路前电容电压为$u_C(0_-)=U_0$，换路后接入直流激励$U_S$，则
@@ -273,11 +474,11 @@
   i_C(t)=\frac{U_S-u_C(0_-)}{R}e^{-t/\tau}\quad (t\geq 0)
 \]
 全响应可看作零状态分量与零输入分量之和，也可看作自由分量与强制分量之和。自由分量随时间衰减，衰减规律仅由电路参数$R$、$C$决定。
-\GuideFigure{0.40}{exp4/assets/principle-rc-full-response.png}{图5.3.4 一阶电路的全响应}
+\GuideCircuitFigure{0.40}{\PrincipleRcFullResponse}{图5.3.4 一阶电路的全响应}
 
 \LabItem{RC一阶电路的方波响应}
 实验中常用函数信号发生器输出方波来模拟阶跃激励。方波上升沿相当于零状态响应的正阶跃激励，方波下降沿相当于零输入响应的负阶跃激励。只要方波的半周期$T/2$大于或接近阶跃响应暂态过程所经历的时间，示波器上即可稳定显示反复出现的充、放电响应。工程上通常认为经过$(3\sim5)\tau$后暂态过程基本结束。
-\GuideFigure{0.62}{exp4/assets/principle-rc-square-response.png}{图5.3.5 一阶电路的方波响应波形}
+\GuideCircuitFigure{0.62}{\PrincipleRcSquareResponse}{图5.3.5 一阶电路的方波响应波形}
 
 \LabItem{微分电路和积分电路}
 在RC串联电路中，若取电阻两端为输出，并使$\tau\ll t_p$（$t_p$为矩形脉冲脉宽，工程上常取$\tau\leq0.1\sim0.2t_p$），则电容充放电很快，有$u_C(t)\approx u_i(t)$，输出近似为
@@ -285,7 +486,7 @@
   u_o(t)=u_R(t)=RC\frac{du_C(t)}{dt}\approx RC\frac{du_i(t)}{dt}
 \]
 因此该电路称为微分电路，可把方波突变沿转换为尖脉冲。
-\GuideFigure{0.48}{exp4/assets/principle-rc-differentiator.png}{图5.3.6（a）RC微分电路及波形}
+\GuideCircuitFigure{0.48}{\PrincipleDifferentiator}{图5.3.6（a）RC微分电路及波形}
 
 若取电容两端为输出，并使$\tau\gg t_p$（工程上常取$\tau\geq5\sim10t_p$），则电容充放电很慢，有$u_R(t)\approx u_i(t)$，输出近似为
 \[
@@ -293,7 +494,7 @@
           \approx \frac{1}{RC}\int_0^t u_i(t)\,dt
 \]
 因此该电路称为积分电路，可把方波转换为近似三角波或锯齿波。
-\GuideFigure{0.48}{exp4/assets/principle-rc-integrator.png}{图5.3.6（b）RC积分电路及波形}
+\GuideCircuitFigure{0.48}{\PrincipleIntegrator}{图5.3.6（b）RC积分电路及波形}
 
 \LabItem{时间常数的测量}
 响应波形衰减或上升的快慢取决于$\tau=RC$。测量时应调节方波频率，使半周期内响应能够进入或接近稳态。可在波形上找$0.632U_S$点测量时间常数；若方波周期$T$在水平轴占$n$格、$\tau$占$m$格，则
@@ -305,7 +506,7 @@
 \LabMinorSection{二阶电路}
 \LabItem{RLC串联电路时域响应}
 能用二阶微分方程描述的电路称为二阶电路。RLC串联电路中电容电压满足
-\GuideFigure{0.30}{exp4/assets/principle-rlc-circuit.png}{图5.3.7 RLC串联电路}
+\GuideCircuitFigure{0.30}{\PrincipleRlcCircuit}{图5.3.7 RLC串联电路}
 \[
   LC\frac{d^2u_C}{dt^2}+RC\frac{du_C}{dt}+u_C=u_S
 \]
@@ -346,7 +547,7 @@
 
 \LabItem{RLC串联电路的谐振}
 RLC串联电路阻抗为
-\GuideFigure{0.32}{exp4/assets/principle-rlc-resonance.png}{图5.3.12 RLC串联谐振观测电路}
+\GuideCircuitFigure{0.42}{\PrincipleRlcResonance}{图5.3.12 RLC串联谐振观测电路}
 \[
   Z=R+j\left(\omega L-\frac{1}{\omega C}\right)=|Z|\angle\varphi
 \]
