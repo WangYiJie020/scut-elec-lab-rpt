@@ -1,0 +1,6 @@
+R	理论值	周期	峰峰值
+55k	2.584ms	1ms	200mV
+65k	3.055ms	1ms	180mV
+75k	3.525ms	1ms	160mV
+85k	3.995ms	1ms	140mV
+95k	4.465ms	1ms	120mV
