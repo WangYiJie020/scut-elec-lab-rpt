@@ -13,6 +13,8 @@
 \newcommand{\ExpFourTableFont}{\ElecLabBodyFont\fontsize{9pt}{12pt}\selectfont}
 \newcommand{\WaveBlank}{\rule{0pt}{6.2\baselineskip}}
 \newcommand{\SmallWaveBlank}{\rule{0pt}{4.4\baselineskip}}
+\newcommand{\DataPhoto}[1]{\includegraphics[width=0.96\linewidth]{#1}}
+\newcommand{\SmallDataPhoto}[1]{\includegraphics[width=0.98\linewidth]{#1}}
 \newcommand{\ExpFourTable}[1]{%
   \begingroup
   \ExpFourTableSetup
@@ -341,14 +343,19 @@
     $R=51\mathrm{k}\Omega$，$C=3900\mathrm{pF}$ &
     $R=51\mathrm{k}\Omega$，$C=0.047\mu\mathrm{F}$ \\
     \midrule
-    $\tau$理论值 & & & \\
+    $\tau$理论值 & $0.039\mathrm{ms}$ & $0.199\mathrm{ms}$ & $2.397\mathrm{ms}$ \\
     \cmidrule(lr){1-4}
     $u_C$波形（同一坐标中画上$u_S$作为参照） &
-    \WaveBlank & \WaveBlank & \WaveBlank \\
+    \DataPhoto{exp4/data/（一）一阶RC电路时域响应/10k3900pF.jpg} &
+    \DataPhoto{exp4/data/（一）一阶RC电路时域响应/51k3900pF.jpg} &
+    \DataPhoto{exp4/data/（一）一阶RC电路时域响应/51k0.047uF.jpg} \\
     \cmidrule(lr){1-4}
-    $u_C$周期、峰峰值 & & & \\
+    $u_C$周期、峰峰值 & $T=1\mathrm{ms}$，$V_{PP}=2.00\mathrm{V}$ &
+    $T=1\mathrm{ms}$，$V_{PP}=1.580\mathrm{V}$ &
+    $T=1\mathrm{ms}$，$V_{PP}=240\mathrm{mV}$ \\
     \cmidrule(lr){1-4}
-    分析时间常数$\tau$对响应波形的影响 & \multicolumn{3}{C{11.4cm}}{\LabTableBlank} \\
+    分析时间常数$\tau$对响应波形的影响 &
+    \multicolumn{3}{C{11.4cm}}{随着$\tau=RC$增大，电容在半周期内充放电越不充分，$u_C$峰峰值减小，到达稳态所需时间变长，电路响应变慢。} \\
     \bottomrule
   \end{tabular}%
 }
@@ -359,11 +366,16 @@
     方波频率$f$ & $100\mathrm{Hz}$ & $1\mathrm{kHz}$ & $10\mathrm{kHz}$ \\
     \midrule
     $u_C$波形（同一坐标中画上$u_S$作为参照） &
-    \WaveBlank & \WaveBlank & \WaveBlank \\
+    \DataPhoto{exp4/data/（二）f 对一阶RC电路响应的影响/100Hz.jpg} &
+    \DataPhoto{exp4/data/（二）f 对一阶RC电路响应的影响/1kHz.jpg} &
+    \DataPhoto{exp4/data/（二）f 对一阶RC电路响应的影响/10kHz.jpg} \\
     \cmidrule(lr){1-4}
-    $u_C$周期、峰峰值 & & & \\
+    $u_C$周期、峰峰值 & $T=10\mathrm{ms}$，$V_{PP}=1.94\mathrm{V}$ &
+    $T=1\mathrm{ms}$，$V_{PP}=1.58\mathrm{V}$ &
+    $T=0.1\mathrm{ms}$，$V_{PP}=360\mathrm{mV}$ \\
     \cmidrule(lr){1-4}
-    分析$f$对波形的影响 & \multicolumn{3}{C{11.4cm}}{\LabTableBlank} \\
+    分析$f$对波形的影响 &
+    \multicolumn{3}{C{11.4cm}}{在$R$、$C$不变时，频率越高，方波半周期越短，电容尚未充分充放电就进入下一阶段，故输出峰峰值明显下降，波形趋于平缓。} \\
     \bottomrule
   \end{tabular}%
 }
@@ -394,18 +406,74 @@
   \end{tabular}%
 }
 
+\newcommand{\DifferentiatorTable}{%
+  \begin{tabular}{@{}C{2.25cm}*{5}{C{2.42cm}}@{}}
+    \toprule
+    $R$ & $5\mathrm{k}\Omega$ & $10\mathrm{k}\Omega$ & $15\mathrm{k}\Omega$ & $20\mathrm{k}\Omega$ & $25\mathrm{k}\Omega$ \\
+    \midrule
+    $\tau$理论值 & $1.95\times10^{-2}\mathrm{ms}$ & $3.90\times10^{-2}\mathrm{ms}$ &
+    $5.85\times10^{-2}\mathrm{ms}$ & $7.80\times10^{-2}\mathrm{ms}$ & $9.75\times10^{-2}\mathrm{ms}$ \\
+    \cmidrule(lr){1-6}
+    $u_R$波形（同一坐标中画上$u_S$作为参照） &
+    \SmallDataPhoto{exp4/data/（四）观察微分电路输出电压波形/5k.jpg} &
+    \SmallDataPhoto{exp4/data/（四）观察微分电路输出电压波形/10k.jpg} &
+    \SmallDataPhoto{exp4/data/（四）观察微分电路输出电压波形/15k.jpg} &
+    \SmallDataPhoto{exp4/data/（四）观察微分电路输出电压波形/20k.jpg} &
+    \SmallDataPhoto{exp4/data/（四）观察微分电路输出电压波形/25k.jpg} \\
+    \cmidrule(lr){1-6}
+    $u_R$周期、峰峰值 & $T=1\mathrm{ms}$，$V_{PP}=3.61\mathrm{V}$ &
+    $T=1\mathrm{ms}$，$V_{PP}=3.60\mathrm{V}$ &
+    $T=1\mathrm{ms}$，$V_{PP}=3.74\mathrm{V}$ &
+    $T=1\mathrm{ms}$，$V_{PP}=3.63\mathrm{V}$ &
+    $T=1\mathrm{ms}$，$V_{PP}=3.72\mathrm{V}$ \\
+    \bottomrule
+  \end{tabular}%
+}
+
+\newcommand{\IntegratorTable}{%
+  \begin{tabular}{@{}C{2.25cm}*{5}{C{2.42cm}}@{}}
+    \toprule
+    $R$ & $55\mathrm{k}\Omega$ & $65\mathrm{k}\Omega$ & $75\mathrm{k}\Omega$ & $85\mathrm{k}\Omega$ & $95\mathrm{k}\Omega$ \\
+    \midrule
+    $\tau$理论值 & $2.584\mathrm{ms}$ & $3.055\mathrm{ms}$ & $3.525\mathrm{ms}$ & $3.995\mathrm{ms}$ & $4.465\mathrm{ms}$ \\
+    \cmidrule(lr){1-6}
+    $u_C$波形（同一坐标中画上$u_S$作为参照） &
+    \SmallDataPhoto{exp4/data/（五）观察积分电路输出电压波形/55k.jpg} &
+    \SmallDataPhoto{exp4/data/（五）观察积分电路输出电压波形/65k.jpg} &
+    \SmallDataPhoto{exp4/data/（五）观察积分电路输出电压波形/75k.jpg} &
+    \SmallDataPhoto{exp4/data/（五）观察积分电路输出电压波形/85k.jpg} &
+    \SmallDataPhoto{exp4/data/（五）观察积分电路输出电压波形/95k.jpg} \\
+    \cmidrule(lr){1-6}
+    $u_C$周期、峰峰值 & $T=1\mathrm{ms}$，$V_{PP}=200\mathrm{mV}$ &
+    $T=1\mathrm{ms}$，$V_{PP}=180\mathrm{mV}$ &
+    $T=1\mathrm{ms}$，$V_{PP}=160\mathrm{mV}$ &
+    $T=1\mathrm{ms}$，$V_{PP}=140\mathrm{mV}$ &
+    $T=1\mathrm{ms}$，$V_{PP}=120\mathrm{mV}$ \\
+    \bottomrule
+  \end{tabular}%
+}
+
 \newcommand{\RlcDampingTable}{%
   \begin{tabular}{@{}C{1.65cm}C{1.85cm}*{5}{C{1.95cm}}@{}}
     \toprule
     项目 & 理论临界值 & 数据1 & 数据2 & 数据3 & 数据4 & 数据5 \\
     \midrule
-    $R$取值 & $2\sqrt{L/C}$ & & & & & \\
+    $R$取值 & $2\sqrt{L/C}\approx2.26\mathrm{k}\Omega$ &
+    $0\Omega$ & $400\Omega$ & $1580\Omega$ & $6000\Omega$ & $20\mathrm{k}\Omega$ \\
     \cmidrule(lr){1-7}
-    阻尼状态 & & 无阻尼/欠阻尼 & 欠阻尼 & 临界阻尼 & 过阻尼 & 过阻尼 \\
+    阻尼状态 & & 无阻尼/欠阻尼 & 欠阻尼 & 临界阻尼附近 & 过阻尼 & 过阻尼 \\
     \cmidrule(lr){1-7}
-    $u_C$波形 & & \SmallWaveBlank & \SmallWaveBlank & \SmallWaveBlank & \SmallWaveBlank & \SmallWaveBlank \\
+    $u_C$波形 & &
+    \SmallDataPhoto{exp4/data/（六）观测二阶RLC电路的时域响应/0.jpg} &
+    \SmallDataPhoto{exp4/data/（六）观测二阶RLC电路的时域响应/400.jpg} &
+    \SmallDataPhoto{exp4/data/（六）观测二阶RLC电路的时域响应/1580.jpg} &
+    \SmallDataPhoto{exp4/data/（六）观测二阶RLC电路的时域响应/6000.jpg} &
+    \SmallDataPhoto{exp4/data/（六）观测二阶RLC电路的时域响应/20k.jpg} \\
     \cmidrule(lr){1-7}
-    周期、峰峰值 & & & & & & \\
+    周期、峰峰值 & & 未记录 & $T=1\mathrm{ms}$，$V_{PP}=3.88\mathrm{V}$ &
+    $T=1\mathrm{ms}$，$V_{PP}=2.02\mathrm{V}$ &
+    $T=1\mathrm{ms}$，$V_{PP}=2.00\mathrm{V}$ &
+    $T=1\mathrm{ms}$，$V_{PP}=1.96\mathrm{V}$ \\
     \bottomrule
   \end{tabular}%
 }
@@ -413,13 +481,13 @@
 \newcommand{\RlcResonanceTable}{%
   \begin{tabular}{@{}C{2.3cm}*{7}{C{1.65cm}}@{}}
     \toprule
-    $f/\mathrm{kHz}$ & & & & & & & \\
+    $f/\mathrm{kHz}$ & $1$ & $5$ & $7$ & $10.5$ & $11$ & $11.5$ & $15$ \\
     \midrule
-    $U_S$有效值/V & & & & & & & \\
+    $U_S$有效值/V & $0.681$ & $0.679$ & $0.673$ & $0.663$ & $0.665$ & $0.664$ & $0.667$ \\
     \cmidrule(lr){1-8}
-    $U_R$有效值/V & & & & & & & \\
+    $U_R$有效值/V & $0.206$ & $0.522$ & $0.589$ & $0.658$ & $0.663$ & $0.656$ & $0.642$ \\
     \cmidrule(lr){1-8}
-    谐振判断 & & & & & & & \\
+    谐振判断 & 未谐振 & 未谐振 & 接近 & 接近 & 谐振点附近 & 接近 & 偏离 \\
     \bottomrule
   \end{tabular}%
 }
@@ -580,21 +648,16 @@ RLC串联电路阻抗为
 函数信号发生器输出$1.0\mathrm{kHz}$、$2.0\mathrm{V_{PP}}$方波。按图接线，用示波器CH1观察$u_S$，CH2观察$u_C$，改变$R$、$C$取值，记录$u_C$波形、周期和峰峰值。
 \LabItem{测试数据}
 \ExpFourTable{\RcTauTable}
-\LabDataAnalysisBlock{2.8\baselineskip}
+\LabItem{数据分析}
+由表中数据可知，当$R=10\mathrm{k}\Omega$、$C=3900\mathrm{pF}$时，$\tau$最小，电容电压能够在半周期内较快接近稳态，峰峰值约为$2.00\mathrm{V}$；当$R$增大为$51\mathrm{k}\Omega$时，$\tau$增大，$u_C$峰峰值下降到$1.580\mathrm{V}$；当电容增大到$0.047\mu\mathrm{F}$时，$\tau$进一步增大到$2.397\mathrm{ms}$，大于方波半周期，电容来不及充分充放电，峰峰值仅约$240\mathrm{mV}$。因此时间常数越大，响应越慢，波形变化越平缓。
 
 \LabMinorSection{$f$对一阶RC电路响应的影响}
 \LabItem{测试条件}
 取$R=51\mathrm{k}\Omega$、$C=3900\mathrm{pF}$，函数信号发生器输出$2.0\mathrm{V_{PP}}$方波，分别改变频率。
 \LabItem{测试数据}
 \ExpFourTable{\RcFrequencyTable}
-\LabDataAnalysisBlock{2.4\baselineskip}
-
-\LabMinorSection{测量时间常数$\tau$}
-\LabItem{测试条件}
-取$R=51\mathrm{k}\Omega$、$C=3900\mathrm{pF}$。调节方波频率，使半周期内响应能够进入稳态，利用$0.632U_S$点或示波器光标测量$\tau$。
-\LabItem{测试数据}
-\ExpFourTable{\TauMeasureTable}
-\LabDataAnalysisBlock{2.4\baselineskip}
+\LabItem{数据分析}
+在$R=51\mathrm{k}\Omega$、$C=3900\mathrm{pF}$不变时，频率从$100\mathrm{Hz}$升至$10\mathrm{kHz}$，周期由$10\mathrm{ms}$缩短为$0.1\mathrm{ms}$，$u_C$峰峰值由$1.94\mathrm{V}$下降到$360\mathrm{mV}$。这是因为频率升高后，每个半周期留给电容充放电的时间变短，暂态过程尚未结束就进入反向过程，输出幅度减小，响应曲线更接近小幅度的近似线性变化。
 
 \LabMinorSection{观察微分电路输出电压波形}
 \LabItem{电路图}
@@ -604,8 +667,9 @@ RLC串联电路阻抗为
 \LabItem{测试条件}
 函数信号发生器输出$1.0\mathrm{kHz}$、$2.0\mathrm{V_{PP}}$方波，$C=3900\mathrm{pF}$，$R$用电阻箱取5个合适数值。
 \LabItem{测试数据}
-\ExpFourTable{\FiveStepRcTable{$5\mathrm{k}\Omega$}{$10\mathrm{k}\Omega$}{$15\mathrm{k}\Omega$}{$20\mathrm{k}\Omega$}{$25\mathrm{k}\Omega$}{$u_R$}}
-\LabDataAnalysisBlock{2.8\baselineskip}
+\ExpFourTable{\DifferentiatorTable}
+\LabItem{数据分析}
+微分电路取电阻两端电压为输出，输出主要出现在方波跳变沿附近。实验中$C=3900\mathrm{pF}$，随着$R$由$5\mathrm{k}\Omega$增至$25\mathrm{k}\Omega$，理论时间常数由$1.95\times10^{-2}\mathrm{ms}$增至$9.75\times10^{-2}\mathrm{ms}$，尖脉冲宽度相应增大，充放电速度变慢。各组峰峰值基本保持在$3.6\mathrm{V}$左右，说明输出仍以跳变沿响应为主，但$R$继续增大时微分条件$\tau\ll t_p$会变差，波形尖锐程度降低。
 
 \LabMinorSection{观察积分电路输出电压波形}
 \LabItem{电路图}
@@ -615,8 +679,9 @@ RLC串联电路阻抗为
 \LabItem{测试条件}
 函数信号发生器输出$1.0\mathrm{kHz}$、$2.0\mathrm{V_{PP}}$方波，$C=0.047\mu\mathrm{F}$，$R$用电阻箱取5个合适数值。
 \LabItem{测试数据}
-\ExpFourTable{\FiveStepRcTable{$55\mathrm{k}\Omega$}{$65\mathrm{k}\Omega$}{$75\mathrm{k}\Omega$}{$85\mathrm{k}\Omega$}{$95\mathrm{k}\Omega$}{$u_C$}}
-\LabDataAnalysisBlock{2.8\baselineskip}
+\ExpFourTable{\IntegratorTable}
+\LabItem{数据分析}
+积分电路取电容两端电压为输出，要求$\tau=RC$明显大于脉冲宽度。表中$R$从$55\mathrm{k}\Omega$增大到$95\mathrm{k}\Omega$时，$\tau$由$2.584\mathrm{ms}$增至$4.465\mathrm{ms}$，均大于$1\mathrm{kHz}$方波的半周期。随着$\tau$增大，电容电压变化更慢，输出峰峰值由$200\mathrm{mV}$降至$120\mathrm{mV}$，积分波形幅度减小并更加平缓。
 
 \LabMinorSection{观测二阶RLC电路的时域响应}
 \LabItem{电路图}
@@ -627,7 +692,8 @@ RLC串联电路阻抗为
 函数信号发生器输出$1.0\mathrm{kHz}$、$2.0\mathrm{V_{PP}}$方波，$L=5\mathrm{mH}$，$C=3900\mathrm{pF}$，$R$用电阻箱代替。从小到大调节$R$，观察无阻尼、欠阻尼、临界阻尼、过阻尼响应。
 \LabItem{测试数据}
 \ExpFourTable{\RlcDampingTable}
-\LabDataAnalysisBlock{3.2\baselineskip}
+\LabItem{数据分析}
+由$L=5\mathrm{mH}$、$C=3900\mathrm{pF}$计算，理想临界电阻$R_c=2\sqrt{L/C}\approx2.26\mathrm{k}\Omega$。实验中小电阻时波形出现明显衰减振荡，属于欠阻尼响应；$R=400\Omega$时振荡仍较明显，但衰减加快；$R=1580\Omega$附近波形最快趋于稳定，接近临界阻尼；当$R$增至$6000\Omega$和$20\mathrm{k}\Omega$时，输出不再振荡，表现为过阻尼。实验临界值与理论值存在差异，主要与电感内阻、信号源内阻、元件容差和接线寄生参数有关。
 
 \LabMinorSection{定性观察RLC串联电路谐振现象}
 \LabItem{电路图}
@@ -638,20 +704,22 @@ RLC串联电路阻抗为
 函数信号发生器输出$2.0\mathrm{V_{PP}}$正弦波，参考取$R=1\mathrm{k}\Omega$，$L=5\mathrm{mH}$，$C=0.047\mu\mathrm{F}$。改变频率，记录$U_S$和$U_R$，以$U_R$最大或$u_R$与$u_S$同相作为谐振点判断依据。
 \LabItem{测试数据}
 \ExpFourTable{\RlcResonanceTable}
-\LabDataAnalysisBlock{3.0\baselineskip}
+\LabItem{数据分析}
+表中$U_S$基本稳定在$0.66\sim0.68\mathrm{V}$，说明扫频过程中电源输出幅度变化较小。$U_R$随频率升高先增大，在$11\mathrm{kHz}$附近达到最大值$0.663\mathrm{V}$，随后略有下降，故可判断电路谐振频率约为$11\mathrm{kHz}$。按$L=5\mathrm{mH}$、$C=0.047\mu\mathrm{F}$计算理论谐振频率$f_0=1/(2\pi\sqrt{LC})\approx10.38\mathrm{kHz}$，与实验结果接近。谐振前电路呈容性，谐振后呈感性，谐振时阻抗最小、电流最大，故电阻电压最大。
 
 \LabMajorSection{思考题}
 \labresetitems
 \LabItem{何谓积分电路和微分电路？它们必须具备什么条件？这两种电路有什么作用？}
-\LabBlank{3.4\baselineskip}
+积分电路是输出电压近似与输入电压对时间的积分成正比的电路。RC积分电路通常取电容电压为输出，并要求时间常数$\tau=RC$远大于输入脉冲宽度或信号周期的主要变化时间，即$\tau\gg t_p$，使电容充放电较慢。它可用于波形变换、信号平滑、低通滤波和脉冲累积。
+
+微分电路是输出电压近似与输入电压对时间的微分成正比的电路。RC微分电路通常取电阻电压为输出，并要求$\tau=RC$远小于输入脉冲宽度，即$\tau\ll t_p$，使输出主要反映输入信号的突变沿。它可用于提取边沿、产生尖脉冲、检测信号变化率和高通滤波。
+
 \LabItem{当RLC二阶电路处于过阻尼情况下，若再增加电阻$R$，对过渡过程有何影响？在欠阻尼情况下，再减少$R$，过渡过程又有何影响？在什么情况下电路达到稳态的时间最短？}
-\LabBlank{3.8\baselineskip}
+过阻尼时若继续增大$R$，电路仍不振荡，但响应速度会进一步变慢，过渡过程持续时间变长，上升或衰减曲线更平缓。欠阻尼时若继续减小$R$，阻尼减弱，振荡更明显，振幅衰减更慢，过渡过程中可能出现更大的超调和更多次振荡。临界阻尼是振荡与非振荡的分界状态，通常能在不产生振荡的条件下以最快速度达到稳态，因此稳态建立时间最短。
 
 \LabMajorSection{附加题}
 \labresetitems
-\LabItem{自行设计RLC二阶动态电路，用Multisim软件仿真，在方波激励下改变电路参数$R$，使其满足过阻尼、欠阻尼、临界阻尼、无阻尼条件，观察并记录$u_C$和$u_R$波形。}
-\LabBlank{3.0\baselineskip}
 \LabItem{在一阶二阶电路响应实验中，结合科学精神内涵，说明从发现实验数据与理论预期存在偏差，到寻找原因并解决问题的全过程。}
-\LabBlank{3.0\baselineskip}
+在实验中若发现数据与理论预期不一致，首先应保持实事求是的态度，完整记录原始现象，而不是直接修改数据。随后从最基本环节开始排查：检查电路连接是否与实验原理图一致，确认示波器探头倍率、耦合方式、接地位置和函数信号发生器输出幅度、频率设置是否正确；再用万用表复核电阻、电容、电感的实际值，考虑电感内阻、信号源内阻、导线和面包板寄生参数对结果的影响。若仍有偏差，应重复测量、改变量程或扫描范围，并与理论公式重新计算比较。最后把确认后的误差来源写入分析结论。这个过程体现了尊重事实、严谨求证、主动怀疑和不断修正的科学精神。
 
 \end{document}
