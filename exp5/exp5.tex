@@ -1,0 +1,279 @@
+\documentclass{eleclab-report}
+
+\usetikzlibrary{arrows.meta}
+\usepackage[siunitx, RPvoltages]{circuitikz}
+
+\setexperimentnumber{5}
+\setexperimenttitle{谐振电路的特性研究}
+
+\newcommand{\ExpFiveTableSetup}{%
+  \setlength{\tabcolsep}{3.2pt}%
+  \renewcommand{\arraystretch}{1.18}%
+}
+\newcommand{\ExpFiveTableFont}{\ElecLabBodyFont\fontsize{9pt}{12pt}\selectfont}
+\newcommand{\ExpFiveTable}[1]{%
+  \begingroup
+  \ExpFiveTableSetup
+  \begin{center}
+  {\ExpFiveTableFont #1}
+  \end{center}
+  \endgroup
+}
+\newcommand{\ExpFiveWideTable}[1]{%
+  \begingroup
+  \ExpFiveTableSetup
+  \begin{center}
+  \resizebox{\linewidth}{!}{{\ExpFiveTableFont #1}}
+  \end{center}
+  \endgroup
+}
+\newcommand{\WaveBlank}{\rule{0pt}{5.4\baselineskip}}
+\newcommand{\PlotBlank}{\rule{0pt}{9.0\baselineskip}}
+\newcommand{\GuideCircuitFigure}[3]{%
+  \begin{center}
+    \resizebox{#1\linewidth}{!}{#2}\\[-0.2\baselineskip]
+    {\ExpFiveTableFont #3}
+  \end{center}
+}
+
+\newcommand{\SeriesResonanceCircuit}[1]{%
+  \begin{circuitikz}[american,x=1cm,y=1cm,line cap=round,line join=round]
+    \draw (0,1.9) node[ocirc] {} to[short] (0.65,1.9)
+      to[L] (2.15,1.9)
+      to[R] (3.35,1.9)
+      to[C] (4.65,1.9)
+      to[short] (5.25,1.9) node[ocirc] {};
+    \draw (0,0) node[ocirc] {} to[short] (5.25,0) node[ocirc] {};
+    \draw (3.35,1.9) to[rmeter,t=mV] (3.35,0);
+    \draw (0.65,1.9) to[rmeter,t=mV] (0.65,0);
+    \node[above] at (1.4,2.25) {\scriptsize 电感线圈 $L=140\mathrm{mH}$};
+    \node[above] at (2.75,2.2) {\scriptsize $r$};
+    \node[above] at (4.0,2.2) {\scriptsize $C=0.01\mu\mathrm{F}$};
+    \node[below] at (2.7,-0.2) {\scriptsize $R=#1$};
+    \node[left] at (-0.2,0.95) {\scriptsize 函数信号发生器};
+    \node[right] at (5.45,0.95) {\scriptsize $U_S=1.0\mathrm{V}$};
+  \end{circuitikz}%
+}
+
+\newcommand{\ResonanceTheoryTable}{%
+  \begin{tabular}{@{}C{4.0cm}C{4.0cm}C{4.0cm}@{}}
+    \toprule
+    项目 & $R=30\Omega$ & $R=100\Omega$ \\
+    \midrule
+    $L$、$C$名义值 & $L=140\mathrm{mH}$，$C=0.01\mu\mathrm{F}$ &
+    $L=140\mathrm{mH}$，$C=0.01\mu\mathrm{F}$ \\
+    \cmidrule(lr){1-3}
+    理论谐振频率$f_0$ & $4.254\mathrm{kHz}$ & $4.254\mathrm{kHz}$ \\
+    \cmidrule(lr){1-3}
+    理想品质因数$Q$ & $124.72$ & $37.42$ \\
+    \cmidrule(lr){1-3}
+    说明 & \multicolumn{2}{C{8.0cm}@{}}{以上$Q$按理想公式$Q=(1/R)\sqrt{L/C}$计算，未计入电感线圈交流内阻$r$。实际$Q$需由实测$U_C/U_S$或带宽计算。} \\
+    \bottomrule
+  \end{tabular}%
+}
+
+\newcommand{\ResonancePointTable}{%
+  \begin{tabular}{@{}C{3.2cm}C{3.2cm}C{3.2cm}C{3.2cm}@{}}
+    \toprule
+    项目 & $f_0$ & $U_{R0}$ & $U_{C0}$ \\
+    \midrule
+    实测值 & \LabTableBlank & \LabTableBlank & \LabTableBlank \\
+    \cmidrule(lr){1-4}
+    理论/预估值 & $4.254\mathrm{kHz}$ & \LabTableBlank & \LabTableBlank \\
+    \bottomrule
+  \end{tabular}%
+}
+
+\newcommand{\FrequencyResponseTable}[1]{%
+  \begin{tabular}{@{}C{1.7cm}*{12}{C{1.15cm}}@{}}
+    \toprule
+    $R=#1$ & 数据1 & 数据2 & 数据3 & 数据4 & 数据5 & 数据6 & 数据7 & 数据8 & 数据9 & 数据10 & 数据11 & 数据12 \\
+    \midrule
+    $f/\mathrm{kHz}$ & & & & & & & & & & & & \\
+    \cmidrule(lr){1-13}
+    $f/f_0$ & & & & & & & & & & & & \\
+    \cmidrule(lr){1-13}
+    $U_R/\mathrm{mV}$ & & & & & & & & & & & & \\
+    \cmidrule(lr){1-13}
+    $I_R/\mathrm{mA}$ & & & & & & & & & & & & \\
+    \cmidrule(lr){1-13}
+    $I/I_0$ & & & & & & & & & & & & \\
+    \cmidrule(lr){1-13}
+    $|Z|/\mathrm{k}\Omega$ & & & & & & & & & & & & \\
+    \bottomrule
+  \end{tabular}%
+}
+
+\newcommand{\BandwidthTable}{%
+  \begin{tabular}{@{}C{2.8cm}C{2.8cm}C{2.8cm}C{2.8cm}C{2.8cm}@{}}
+    \toprule
+    $U_{R0}$ & $0.707U_{R0}$ & $f_1$ & $f_2$ & $B_f=f_2-f_1$ \\
+    \midrule
+    \LabTableBlank & \LabTableBlank & \LabTableBlank & \LabTableBlank & \LabTableBlank \\
+    \bottomrule
+  \end{tabular}%
+}
+
+\begin{document}
+\makelabtitle
+\makelabheadertable
+
+\LabMajorSection{实验目的}
+\begin{LabArabicList}
+  \item 复习RLC串联电路产生谐振的条件，理解谐振频率、品质因数和通频带的物理意义。
+  \item 学习使用函数信号发生器和数字交流毫伏表测量RLC串联电路的谐振频率$f_0$、谐振时电阻电压$U_{R0}$和电容电压$U_{C0}$。
+  \item 掌握测定RLC串联电路幅频特性的方法，绘制不同电阻值下的通用幅频特性曲线。
+  \item 比较电阻值和品质因数$Q$对幅频曲线尖锐程度、选择性和通频带宽度的影响。
+  \item 学习由实验数据计算电感线圈交流内阻、品质因数、通频带和电路总阻抗的方法。
+\end{LabArabicList}
+
+\LabMajorSection{实验原理}
+\LabMinorSection{RLC串联电路的谐振条件}
+RLC串联电路的阻抗为
+\[
+  Z=R+j\left(\omega L-\frac{1}{\omega C}\right)=|Z|\angle\varphi
+\]
+其中$R$为外接电阻与电感线圈等效内阻的合成电阻。串联电路总电抗为零时发生谐振，即
+\[
+  \omega L-\frac{1}{\omega C}=0
+\]
+因此谐振角频率和谐振频率为
+\[
+  \omega_0=\frac{1}{\sqrt{LC}},\qquad
+  f_0=\frac{1}{2\pi\sqrt{LC}}
+\]
+谐振频率只由$L$、$C$决定。$\omega<\omega_0$时电路呈容性，$\omega>\omega_0$时电路呈感性，$\omega=\omega_0$时电路阻抗最小、电流最大，电源电压与电流同相，电阻两端电压$U_R$达到最大。
+
+\GuideCircuitFigure{0.62}{\SeriesResonanceCircuit{R}}{图5.1 RLC串联谐振测量电路}
+
+\LabMinorSection{品质因数}
+串联谐振时有$\omega_0L=1/(\omega_0C)$，电感电压和电容电压大小相等、相位相反。电感或电容两端电压与电源电压的比值称为品质因数：
+\[
+  Q=\frac{U_L}{U_S}=\frac{U_C}{U_S}
+   =\frac{\omega_0L}{R}
+   =\frac{1}{R\omega_0C}
+   =\frac{1}{R}\sqrt{\frac{L}{C}}
+\]
+$Q$越大，谐振峰越尖锐，电路选择性越好；$Q$越小，幅频曲线越平缓，通频带越宽。实际实验中电感线圈存在交流内阻$r$，计算时总电阻应按$R+r$考虑。
+
+\LabMinorSection{幅频特性与相频特性}
+在正弦稳态下，回路电流有效值随角频率变化的关系为
+\[
+  I(\omega)=\frac{U_S}{\sqrt{R^2+\left(\omega L-\frac{1}{\omega C}\right)^2}}
+  =\frac{U_S}{R\sqrt{1+Q^2\left(\frac{\omega}{\omega_0}-\frac{\omega_0}{\omega}\right)^2}}
+\]
+设$I_0=U_S/R$为谐振时电流有效值，则通用幅频特性为
+\[
+  \frac{I}{I_0}=
+  \frac{1}{\sqrt{1+Q^2\left(\frac{\omega}{\omega_0}-\frac{\omega_0}{\omega}\right)^2}}
+\]
+由于实验中测量电阻电压$U_R$，且$I=U_R/R$，所以可用
+\[
+  \frac{I}{I_0}=\frac{U_R}{U_{R0}}
+\]
+绘制通用幅频曲线。相频特性可由
+\[
+  \varphi(\omega)=\tan^{-1}\frac{\omega L-\frac{1}{\omega C}}{R}
+\]
+描述，谐振时$\varphi=0$。
+
+\LabMinorSection{通频带和总阻抗}
+幅频曲线由峰值下降到$0.707$倍峰值时，对应的两个频率分别记为$f_1$和$f_2$，通频带为
+\[
+  B_f=f_2-f_1
+\]
+对串联谐振电路而言，$Q$越大，$B_f$越小，频率选择性越强。实验数据中总阻抗可由
+\[
+  |Z|=\frac{U_S}{I}=\frac{U_S}{U_R/R}=\frac{RU_S}{U_R}
+\]
+计算。若要计入电感线圈交流内阻，可先在谐振点由实测数据求总电阻，再扣除外接电阻：
+\[
+  R_\Sigma=\frac{U_S}{I_0}=\frac{RU_S}{U_{R0}},\qquad
+  r=R_\Sigma-R
+\]
+
+\LabMinorSection{本实验理论值}
+本实验名义参数为$L=140\mathrm{mH}$、$C=0.01\mu\mathrm{F}$，由此
+\[
+  f_0=\frac{1}{2\pi\sqrt{LC}}\approx4.254\mathrm{kHz}
+\]
+理想情况下不计电感线圈交流内阻时，$R=30\Omega$与$R=100\Omega$对应的品质因数如下。
+\ExpFiveTable{\ResonanceTheoryTable}
+
+\LabMajorSection{实验设备}
+\begin{LabArabicList}
+  \item 函数信号发生器：输出$1.0\mathrm{V}$有效值正弦信号，并调节频率。
+  \item 数字交流毫伏表或台式数字万用表：测量$U_S$、$U_R$和$U_C$的有效值。
+  \item 九孔方板、连接导线及实验所需元件。
+  \item 电阻：$30\Omega$、$100\Omega$。
+  \item 电感线圈：名义电感$140\mathrm{mH}$，存在等效交流内阻$r$。
+  \item 电容：$0.01\mu\mathrm{F}$。
+\end{LabArabicList}
+
+\LabMajorSection{实验内容}
+\LabMinorSection{测量$R=30\Omega$时谐振点的$f_0$、$U_{R0}$和$U_{C0}$}
+\LabItem{电路图}
+\GuideCircuitFigure{0.62}{\SeriesResonanceCircuit{30\Omega}}{图5.2 $R=30\Omega$时谐振点测量电路}
+\LabItem{测试条件}
+函数信号发生器输出正弦波，保持$U_S=1.0\mathrm{V}$有效值；取$R=30\Omega$、$L=140\mathrm{mH}$、$C=0.01\mu\mathrm{F}$。调节频率，使$U_R$达到最大，记录此时$f_0$和$U_{R0}$；再交换$R$与$C$的位置，保持同一谐振频率并测量$U_{C0}$。
+\LabItem{数据表格}
+\ExpFiveTable{\ResonancePointTable}
+\LabItem{数据处理}
+由实测$U_{R0}$计算谐振时电流$I_0=U_{R0}/R$，再计算电路总电阻$R_\Sigma=U_S/I_0$和电感线圈交流内阻$r=R_\Sigma-R$。由实测$U_{C0}$计算品质因数
+\[
+  Q=\frac{U_{C0}}{U_S}
+\]
+并与理论值$Q=124.72$比较。
+
+\LabMinorSection{测定$R=30\Omega$时串联回路的幅频特性}
+\LabItem{测试条件}
+保持$U_S=1.0\mathrm{V}$有效值，取$R=30\Omega$、$L=140\mathrm{mH}$、$C=0.01\mu\mathrm{F}$。以实测谐振频率为中心，在$f_0$前后各取若干频率点，记录$f$和$U_R$。
+\LabItem{数据表格}
+\ExpFiveWideTable{\FrequencyResponseTable{30\Omega}}
+\LabItem{数据处理}
+逐点计算$I_R=U_R/R$、$I/I_0=U_R/U_{R0}$和$|Z|=RU_S/U_R$。根据$f/f_0$和$I/I_0$绘制通用幅频特性曲线，根据$\omega=2\pi f$和$|Z|$绘制阻抗频率特性曲线。
+
+\LabMinorSection{测定$R=100\Omega$时串联回路的幅频特性}
+\LabItem{电路图}
+\GuideCircuitFigure{0.62}{\SeriesResonanceCircuit{100\Omega}}{图5.3 $R=100\Omega$时幅频特性测量电路}
+\LabItem{测试条件}
+将外接电阻换为$100\Omega$，保持$U_S=1.0\mathrm{V}$有效值，重复谐振点和幅频特性测量。理论谐振频率仍为$4.254\mathrm{kHz}$，理想品质因数为$37.42$。
+\LabItem{数据表格}
+\ExpFiveWideTable{\FrequencyResponseTable{100\Omega}}
+\LabItem{数据处理}
+按$R=100\Omega$重新计算$I_R$、$I/I_0$和$|Z|$。将$R=30\Omega$与$R=100\Omega$的通用幅频曲线画在同一坐标系中，比较$Q$值变化对曲线尖锐程度和通频带的影响。
+
+\LabMinorSection{测量$R=100\Omega$时电路的通频带$B_f$}
+\LabItem{测试条件}
+保持$U_S=1.0\mathrm{V}$有效值，先调至谐振并记录$U_{R0}$，再分别在谐振点两侧寻找$U_R=0.707U_{R0}$对应的频率$f_1$和$f_2$。
+\LabItem{数据表格}
+\ExpFiveTable{\BandwidthTable}
+\LabItem{数据处理}
+计算
+\[
+  B_f=f_2-f_1,\qquad Q\approx\frac{f_0}{B_f}
+\]
+并与由$Q=U_C/U_S$或理想公式得到的品质因数进行比较。
+
+\LabMajorSection{数据分析与结论}
+\LabItem{谐振频率分析}
+将实测$f_0$与理论值$4.254\mathrm{kHz}$比较。若存在偏差，应从电感和电容标称误差、电感线圈寄生参数、仪表读数误差以及信号源输出随频率变化等方面分析原因。
+\LabItem{品质因数分析}
+分别由$U_C/U_S$、$f_0/B_f$和理想公式计算$Q$。实际$Q$通常小于理想值，主要原因是电感线圈交流内阻、导线接触电阻和仪器内阻增加了回路损耗。
+\LabItem{幅频特性分析}
+比较$R=30\Omega$和$R=100\Omega$两条通用幅频曲线。理论上$R$越小，$Q$越大，谐振峰越尖锐，通频带越窄；$R$越大，$Q$越小，曲线越平缓，通频带越宽。
+\LabItem{阻抗频率特性分析}
+串联谐振点处$|Z|$最小，电流最大；偏离谐振点后，感抗或容抗增大，$|Z|$随之增大。低于$f_0$时电路呈容性，高于$f_0$时电路呈感性。
+
+\LabMajorSection{思考题}
+\labresetitems
+\LabItem{电路中的电阻$R$对电路产生何种影响？}
+电阻$R$决定回路损耗和品质因数。$R$增大时，谐振电流减小，品质因数降低，幅频曲线变平缓，通频带变宽，选频能力下降；$R$减小时，品质因数升高，谐振峰更尖锐，通频带变窄，选频能力增强。
+
+\LabItem{怎样才能提高品质因数$Q$？}
+可通过减小回路总电阻、选用低损耗电感和电容、降低接触电阻和导线损耗、优化接线方式等方法提高$Q$。在$L$、$C$一定时，核心是减小等效串联电阻。
+
+\LabItem{用$(R+r)\sqrt{1+Q^2(\omega/\omega_0-\omega_0/\omega)^2}$计算阻抗模是否正确？}
+若$Q$按同一个总电阻$R+r$定义，即$Q=\omega_0L/(R+r)$，该表达式可用于理想串联RLC模型的阻抗模计算。若$r$只是由谐振点估算得到的电感交流内阻，并且随频率变化，则把它当作常数代入全频段公式会引入误差；实际绘制阻抗频率特性时，更稳妥的方法是直接由实测值按$|Z|=RU_S/U_R$或按实际回路电流计算。
+
+\end{document}
