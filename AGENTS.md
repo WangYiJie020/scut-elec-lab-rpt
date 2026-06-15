@@ -51,6 +51,11 @@ These were chosen to match the current local environment. If `SimSun`/`SimHei` d
 - The left dashed binding line is drawn in `shipout/background` inside `my-template/eleclab-report.cls`.
 - The current dash pattern is an approximation of Word `dotDash`, not a literal Word renderer output.
 - Header/footer are intentionally empty, matching the reference document’s effective layout.
+- Experiment data tables use the three-line-table style:
+  - keep only the top rule, header separator, and bottom rule
+  - do not draw rules between data rows
+  - make each table span the full body text width
+- Paragraphs in the "数据分析与结论" section use a first-line indent of two Chinese characters (`2em`).
 
 ## Content Scope
 
