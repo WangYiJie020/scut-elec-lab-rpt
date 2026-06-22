@@ -128,17 +128,17 @@
     $R$ & \makecell[c]{$U_1$\\实测/V} & \makecell[c]{$U_2$\\实测/V} &
     \makecell[c]{$\Delta x$\\实测/$\mu$s} & \makecell[c]{$\varphi_2$\\实测} & 备注 \\
     \midrule
-    $0\Omega$ & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank \\
-    $30\Omega$ & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank \\
-    $100\Omega$ & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank \\
-    $200\Omega$ & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank \\
-    $300\Omega$ & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank \\
-    $390\Omega$ & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank \\
-    $510\Omega$ & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank \\
-    $1\mathrm{k}\Omega$ & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank \\
-    $2\mathrm{k}\Omega$ & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank \\
-    $5.1\mathrm{k}\Omega$ & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank \\
-    $\infty$ & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank & \MeasureBlank \\
+    $0\Omega$ & 1.000 & 1.000 & 0.00 & $0.00^\circ$ & 同相 \\
+    $30\Omega$ & 1.000 & 1.000 & 2.80 & $-10.08^\circ$ & 接近理论 \\
+    $100\Omega$ & 1.000 & 1.000 & 9.90 & $-35.64^\circ$ & 偏大$2.74^\circ$ \\
+    $200\Omega$ & 1.000 & 0.987 & 17.20 & $-61.92^\circ$ & 接近理论 \\
+    $300\Omega$ & 1.000 & 0.990 & 23.20 & $-83.52^\circ$ & 接近理论 \\
+    $390\Omega$ & 1.000 & 0.992 & 27.30 & $-98.28^\circ$ & 接近理论 \\
+    $510\Omega$ & 1.000 & 0.990 & 31.90 & $-114.84^\circ$ & 偏大$2.01^\circ$ \\
+    $1\mathrm{k}\Omega$ & 1.000 & 0.984 & 39.70 & $-142.92^\circ$ & 接近理论 \\
+    $2\mathrm{k}\Omega$ & 1.000 & 0.986 & 44.60 & $-160.56^\circ$ & 接近理论 \\
+    $5.1\mathrm{k}\Omega$ & 1.000 & 0.985 & 48.60 & $-174.96^\circ$ & 偏大$2.56^\circ$ \\
+    $\infty$ & 1.000 & 1.000 & 50.80 & $-182.88^\circ$ & 接近反相 \\
     \bottomrule
   \end{tabularx}%
 }
@@ -281,13 +281,17 @@
 \ExpSixSmallTable{\MeasurementTable}
 
 \LabMinorSection{数据分析}
-\AnalysisParagraph{实测完成后，应先检查$U_2$是否接近$U_1$。若$U_2$随$R$明显变化，需检查两个桥臂的电阻、电容是否对称，示波器探头倍率是否一致，以及输出端负载是否过重。}
-\AnalysisParagraph{相位分析时，以$10\mathrm{kHz}$对应周期$T=100\mu\mathrm{s}$为基准，由示波器测得的时间差$\Delta x$换算相位：$\varphi_2=-360^\circ\Delta x/T$。负号表示输出电压相对输入电压滞后。}
-\AnalysisParagraph{理论上$R$增大时，$\omega RC$增大，$\varphi_2=-2\arctan(\omega RC)$的绝对值单调增大，输出相位由$0^\circ$连续接近$-180^\circ$。若实测曲线保持单调变化且输出幅值基本不变，则说明移相器满足设计要求。}
-\LabBlank{3.0\baselineskip}
+\AnalysisParagraph{本次实验中$U_1$保持为$1.000\mathrm{V}$。除个别读数受示波器读数精度和元件误差影响外，$U_2$大多保持在$0.984\mathrm{V}$至$1.000\mathrm{V}$之间，最大幅值偏差约为$1.6\%$。这说明X型RC网络在对称条件下基本满足全通移相器的幅度保持要求，输出幅值没有像普通RC分压网络那样随$R$显著衰减。}
+\AnalysisParagraph{相位分析以$10\mathrm{kHz}$对应周期$T=100\mu\mathrm{s}$为基准，由示波器测得的时间差$\Delta x$换算相位：$\varphi_2=-360^\circ\Delta x/T=-3.6^\circ\Delta x$。例如$R=300\Omega$时，$\Delta x=23.20\mu\mathrm{s}$，故$\varphi_2=-83.52^\circ$，与理论值$-83.08^\circ$的偏差约为$0.44^\circ$。}
+\AnalysisParagraph{随着$R$由$0\Omega$增大到开路等效$\infty$，实测$\Delta x$由$0.00\mu\mathrm{s}$增加到$50.80\mu\mathrm{s}$，对应相位由$0.00^\circ$变化到约$-182.88^\circ$，整体呈单调滞后趋势。除$100\Omega$、$510\Omega$、$5.1\mathrm{k}\Omega$和开路点误差约为$2^\circ$至$3^\circ$外，其余点与理论值偏差均小于$1^\circ$。}
+\AnalysisParagraph{误差主要来自四个方面：一是实际电容值和标称$0.047\mu\mathrm{F}$存在容差，两只电容不完全相等会破坏桥臂对称性；二是电阻和连线接触电阻会改变实际$\omega RC$；三是示波器光标读数在波形交叉点附近存在有限分辨率，尤其在接近$180^\circ$时小的时间读数偏差会直接转化为相位偏差；四是信号源内阻和示波器探头输入阻抗会对无源网络产生轻微负载效应。}
+\AnalysisParagraph{综合幅值和相位数据可知，本实验移相器能够在$10\mathrm{kHz}$条件下实现近似$0^\circ$至$180^\circ$的连续滞后移相，且输出幅度基本不变。实验结果与公式$\varphi_2=-2\arctan(\omega RC)$的变化规律一致，说明X型RC移相电路的设计和测试结果达到预期。}
 
 \LabMajorSection{拓展（10分）}
-\AnalysisParagraph{若需实现$0^\circ$至$360^\circ$范围内连续可调，可考虑将两个$0^\circ$至$180^\circ$移相单元级联，或使用有源全通移相器组实现更好的隔离和幅值稳定性。也可在Multisim中建立X型RC网络和有源全通网络模型，对不同$R$值下的幅值、相位和负载影响进行仿真比较。}
-\LabBlank{3.0\baselineskip}
+\AnalysisParagraph{思政选做题：观看实验六思政微视频后，我认识到移相器并不只是实验台上的一个RC网络或一个相位调节器件。在现代通信、雷达、导航和电子信息系统中，移相器关系到相控阵天线、波束赋形、射频前端和高速通信链路等关键技术。过去，我国在部分高端电子器件、射频芯片和核心工艺上长期面临技术封锁，很多关键设备和元器件受制于人。正是在这样的背景下，我国科技工作者坚持自主攻关，推动移相器等关键技术逐步实现国产化和工程应用，并进一步服务于5G通信、物联网、人工智能和智能制造等领域。这一历程说明，科技进步从来不是孤立的技术积累，它与国家安全、产业发展和人民生活紧密相连。}
+\AnalysisParagraph{科技进步与家国情怀之间有着十分紧密的联系。科技创新表面上表现为公式推导、实验测试、器件设计和工程验证，本质上却关系到一个国家能否掌握发展主动权。移相器从受制于人到自主创新的过程说明，只有把关键核心技术掌握在自己手中，国家的信息基础设施、通信网络和高端装备才有可靠保障。科技工作者的家国情怀并不是抽象口号，而是体现在面对封锁时不退缩、面对困难时不放弃、面对长期基础研究和反复实验时愿意沉下心来。一次次参数优化、一次次失败后的复盘、一次次工艺改进，背后都是把个人理想融入国家需要的具体行动。}
+\AnalysisParagraph{在这一过程中，科技工作者的家国情怀主要体现在三个方面。第一，是问题导向。他们把国家急需、产业短板和工程瓶颈作为科研方向，而不是只追求容易发表或短期见效的课题。第二，是长期坚守。关键技术突破往往周期长、投入大、失败多，需要科研人员在基础理论、材料工艺、器件封装、系统集成和测试验证等环节持续积累。第三，是协同奉献。现代科技创新很少依靠单个人完成，从高校、科研院所到企业和生产一线，都需要团队协作，把论文成果转化为真正可靠、可批量生产、可部署应用的工程产品。正是这种面向国家需求的责任感，使我国在通信和电子信息领域不断缩小差距，并在部分方向实现并跑甚至领跑。}
+\AnalysisParagraph{这种家国情怀对我国科技发展具有不可替代的推动作用。它为科技工作者提供了超越个人利益的精神动力，使他们愿意承担艰苦任务、选择关键领域、坚持长期攻关；它也把分散的研究力量凝聚到国家战略需求上，使基础研究、工程开发和产业应用形成合力。没有这种情怀，科技创新容易停留在局部改进或短期收益上；有了这种情怀，科研人员才会在关键时刻主动承担责任，在被技术封锁时寻找自主突破的道路，在国家需要时把个人能力转化为服务社会和国家发展的实际成果。}
+\AnalysisParagraph{作为当代学生，我也应当把这种家国情怀融入未来的学习与工作中。首先，要打牢专业基础，认真理解电路、信号、通信和电子技术中的基本原理，不能只满足于完成实验步骤，而要追问公式从何而来、误差为何产生、工程上如何应用。其次，要培养解决真实问题的能力，在实验和课程设计中重视动手验证、数据分析和复盘总结，逐步形成严谨的工程思维。再次，要关注国家科技发展需求，把个人专业选择同集成电路、通信网络、人工智能、智能装备等重要方向联系起来。未来无论从事科研、工程开发还是产业应用，都应坚持诚信、严谨、协作和担当，在自己的岗位上把小问题做扎实、把关键环节做可靠。只有这样，家国情怀才不会停留在情感表达上，而能转化为持续学习、踏实工作和服务国家科技进步的实际行动。}
 
 \end{document}
